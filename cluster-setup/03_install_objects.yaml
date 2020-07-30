@@ -38,3 +38,9 @@
       file:
         name: /tmp/kube-flannel.yml
         state: absent
+
+    - name: Remove master node taint.
+      shell: kubectl taint nodes --all node-role.kubernetes.io/master- >> ~/.kube/removed_taint.txt
+      args:
+        chdir: $HOME
+        creates: ~/.kube/removed_taint.txt

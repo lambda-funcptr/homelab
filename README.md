@@ -3,11 +3,18 @@
 This is the repo that holds my homelab/homeprod* setup. 
 Although it's just for show (mostly), it should be able to create a working k8s cluster anywhere (with modifications) without much issue.
 
+Since I don't want to be redistributing portions unmodified other people's code, I've removed them from the git repository via per-directory `.gitignores`.
+
+**In order to pull the required external dependencies, execute** `./pull-external.sh`.
+
 ## Contents
 
 ### > `bin`
 
-Where context-independent scripts and their ilk go.
+Where context-independent scripts and their ilk go. 
+
+Commands are mostly self-explanatory. 
+Invoking a script without any arguments will print a short usage explanation.
 
 ### > `cluster-setup`
 

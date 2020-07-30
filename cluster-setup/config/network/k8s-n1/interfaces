@@ -8,6 +8,13 @@ iface eno4 inet static
 auto eno1
 iface eno1 inet static
 
+auto eno1.4
+iface eno1.4 inet static
+	address 10.4.0.1/16
+
 auto eno1.64
 iface eno1.64 inet static
 	address 10.64.255.1/16
+
+auto cbr0
+iface cbr0 inet static
