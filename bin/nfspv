@@ -1,21 +1,24 @@
 #!/bin/bash
 
-if [ -z $1 ] then
-    echo: "Usage: ./bin/nfspv pv-name [-p /path/on/nfs/server] [-s Size]"
+if [ -z $1 ]; then
+    echo "Usage: ./bin/nfspv pv-name [-p /path/on/nfs/server] [-s Size]";
 fi
 
-cd $(dirname $0)/../kubernetes/00_storage
+cd $(dirname $0)/../kubernetes/storage
 
 NAME=$1
-PATH="/"
+NFS_PATH="/"
 SIZE="8Gi"
+NAMESPACE=default
 
 ARGS=$1; shift
 
-while getopts ':p:s:' opt; do
+while getopts ':p:s:n:' opt; do
     case ${opt} in
+        n)
+            NAMESPACE=$OPTARG;;
 	    p)
-            PATH=$OPTARG;;
+            NFS_PATH=$OPTARG;;
 	    s)
             SIZE=$OPTARG;;
 	esac
@@ -23,17 +26,24 @@ done
 
 shift $((OPTIND -1))
 
-/usr/bin/cat > $NAME.yaml <<EOF
+mkdir -p $NAMESPACE
+
+/usr/bin/cat > $NAMESPACE/pv-$NAME.yaml <<EOF
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: $NAME
+  namespace: $NAMESPACE
 spec:
   capacity:
     storage: $SIZE
+  volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
+  mountOptions:
+    - hard
+    - nfsvers=4.1
   nfs:
     server: nas.fnptr.net
-    path: "$PATH"
+    path: "$NFS_PATH"
 EOF
