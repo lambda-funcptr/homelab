@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: plex
+    meta.helm.sh/release-namespace: media
+    metallb.universe.tf/address-pool: default
+  creationTimestamp: "2020-07-30T21:09:26Z"
+  labels:
+    app: kube-plex
+    app.kubernetes.io/managed-by: Helm
+    chart: kube-plex-0.2.7
+    heritage: Helm
+    release: plex
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:meta.helm.sh/release-name: {}
+          f:meta.helm.sh/release-namespace: {}
+        f:labels:
+          .: {}
+          f:app: {}
+          f:app.kubernetes.io/managed-by: {}
+          f:chart: {}
+          f:heritage: {}
+          f:release: {}
+      f:spec:
+        f:ports:
+          .: {}
+          k:{"port":80,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":443,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":32400,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:app: {}
+          f:release: {}
+        f:sessionAffinity: {}
+    manager: Go-http-client
+    operation: Update
+    time: "2020-07-30T21:09:26Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:status:
+        f:loadBalancer:
+          f:ingress: {}
+    manager: controller
+    operation: Update
+    time: "2020-07-30T21:34:24Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:kubectl.kubernetes.io/last-applied-configuration: {}
+          f:metallb.universe.tf/address-pool: {}
+      f:spec:
+        f:externalTrafficPolicy: {}
+        f:type: {}
+    manager: kubectl
+    operation: Update
+    time: "2020-07-30T21:34:24Z"
+  name: plex-kube-plex
+  namespace: media
+  resourceVersion: "265734"
+  selfLink: /api/v1/namespaces/media/services/plex-kube-plex
+  uid: e68f81ef-60ea-488f-892f-e6554bf0ebb9
+spec:
+  clusterIP: 10.255.46.138
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: pms
+    nodePort: 30699
+    port: 32400
+    protocol: TCP
+    targetPort: pms
+  - name: http
+    nodePort: 31053
+    port: 80
+    protocol: TCP
+    targetPort: pms
+  - name: https
+    nodePort: 32677
+    port: 443
+    protocol: TCP
+    targetPort: 32443
+  selector:
+    app: kube-plex
+    release: plex
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - ip: 10.64.0.1

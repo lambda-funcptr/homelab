@@ -32,8 +32,7 @@ mkdir -p $NAMESPACE
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: $NAME
-  namespace: $NAMESPACE
+  name: $NAMESPACE-$NAME
 spec:
   capacity:
     storage: $SIZE

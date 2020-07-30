@@ -1,0 +1,3 @@
+[submodule "apps/media/plex/kube-plex"]
+	path = apps/media/plex/kube-plex
+	url = https://github.com/munnerz/kube-plex.git

@@ -1,0 +1,9 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Installing NFS.
+      apt:
+        name:
+          - nfs-common
+          - nfs4-acl-tools
+        state: present

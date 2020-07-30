@@ -1,0 +1,3 @@
+#!/bin/sh
+
+kubectl run debugshell --rm -i --tty --image alpine -- ash

@@ -34,6 +34,10 @@
         chdir: $HOME
         creates: ~/.kube/metallb-secret.txt
 
+    - name: Force IPVS strict ARP.
+      command:
+        cmd: kubectl get configmap kube-proxy -n kube-system -o yaml | sed -e "s/strictARP: false/strictARP: true/" | kubectl apply -f - -n kube-system
+
     - name: Cleaning up Flannel config.
       file:
         name: /tmp/kube-flannel.yml
