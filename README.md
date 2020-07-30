@@ -5,28 +5,28 @@ Although it's just for show (mostly), it should be able to create a working k8s 
 
 ## Contents
 
-### bin
+### `bin`
 
 Where context-independent scripts and their ilk go.
 
-### cluster-setup
+### `cluster-setup`
 
 Initial cluster setup, configuration, and also a teardown playbook (`cluster-setup/99_teardown_cluster.yaml`, untested).
 
 The main setup script is located in `cluster-setup/setup.sh`.
 
-### kubernetes
+### `kubernetes`
 
 Declarative idempotent kubernetes objects for management/features/whatever.
 It should be fine to do run `kubectl apply -Rf kubernetes` to it.
 
 It's probably a good idea to run this before running anything else (e.g. helm charts).
 
-### services
+### `services`
 
 Probably where I'll put stuff like apps (e.g. Plex, and uh... more Plex) deployments.
 
-### secrets
+### `secrets`
 
 Things to do with keys and what not. Has its own .gitignore in order to control what gets pushed.
 
