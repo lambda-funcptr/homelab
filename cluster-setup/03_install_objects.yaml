@@ -29,10 +29,10 @@
         cmd: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
 
     - name: One-time MetalLB secret generation.
-      shell: kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)" >> metallb-secret.txt
+      shell: kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)" >> ~/.kube/metallb-secret.txt
       args:
         chdir: $HOME
-        creates: metallb-secret.txt
+        creates: ~/.kube/metallb-secret.txt
 
     - name: Cleaning up Flannel config.
       file:

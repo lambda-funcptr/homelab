@@ -1,0 +1,15 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Murder kubernetes
+      shell: kubectl reset -f
+
+    - name: Cleaning up /etc/kubernetes.
+      file:
+        name: /etc/kubernetes
+        state: absent
+
+    - name: Cleaning up root home.
+      file:
+        name: /home/root/.kube
+        state: absent
