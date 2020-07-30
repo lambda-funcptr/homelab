@@ -11,7 +11,7 @@ Where context-independent scripts and their ilk go.
 
 ### cluster-setup
 
-Initial cluster setup, configuration, and also a teardown playbook (cluster-setup/99_teardown_cluster.yaml, untested).
+Initial cluster setup, configuration, and also a teardown playbook (`cluster-setup/99_teardown_cluster.yaml`, untested).
 
 The main setup script is located in `cluster-setup/setup.sh`.
 
