@@ -36,7 +36,3 @@ spec:
     release: plex
   sessionAffinity: None
   type: LoadBalancer
-status:
-  loadBalancer:
-    ingress:
-    - ip: 10.64.0.1
