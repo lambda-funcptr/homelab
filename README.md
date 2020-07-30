@@ -17,9 +17,23 @@ The main setup script is located in `cluster-setup/setup.sh`.
 
 ### kubernetes
 
-Declarative idempotent kubernetes objects.
+Declarative idempotent kubernetes objects for management/features/whatever.
 It should be fine to do run `kubectl apply -Rf kubernetes` to it.
 
-### secretes
+It's probably a good idea to run this before running anything else (e.g. helm charts).
+
+### services
+
+Probably where I'll put stuff like apps (e.g. Plex, and uh... more Plex) deployments.
+
+### secrets
 
 Things to do with keys and what not. Has its own .gitignore in order to control what gets pushed.
+
+## Shoutouts
+
+Thanks to:
+- Homelab Discord for making me feel bad about my lab choices regardless of what I do
+- Lucratiel from Homelab Discord for inspiring me to ~~waste my life on~~ use Kubernetes 
+- Watcher7 from Homelab Discord for telling me about MetalLB
+- Liam Silvers for pointing out that I can't spell "secrets".
