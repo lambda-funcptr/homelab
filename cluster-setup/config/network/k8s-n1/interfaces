@@ -1,0 +1,13 @@
+auto eno4
+iface eno4 inet static
+	address 10.2.0.1/16
+	gateway 10.2.255.254
+	dns-nameservers 172.16.0.1
+	dns-search fnptr.net
+
+auto eno1
+iface eno1 inet static
+
+auto eno1.64
+iface eno1.64 inet static
+	address 10.64.255.1/16

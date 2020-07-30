@@ -1,0 +1,79 @@
+- hosts: all
+  vars:
+    k8s_version: 1.18.6-00
+  become: yes
+  tasks:
+    - name: Installing ifupdown2 and other network tools.
+      apt:
+        name:
+          - ifupdown2
+          - bridge-utils
+          - ethtool
+        state: present
+
+    - name: Pushing network configuration to the nodes.
+      copy:
+        src: config/network/{{inventory_hostname}}/interfaces
+        dest: /etc/network/interfaces
+
+    - name: Reloading network configuration
+      command:
+        cmd: ifreload -a
+
+    - name: Installing Kubernetes dependencies.
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - gnupg2
+          - software-properties-common
+        state: present
+
+    - name: Adding Kubernetes key.
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Adding upstream Kubernetes repository.
+      apt_repository:
+        repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+        filename: 'kubernetes'
+  
+    - name: add Docker apt-key
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+
+    - name: add Docker's APT repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/debian stretch stable
+        state: present
+        filename: 'docker'
+
+    - name: Installing Docker.
+      apt:
+        name: docker-ce
+        state: present
+        update_cache: true
+
+    - name: Installing Kubelet.
+      apt:
+        pkg: kubelet={{k8s_version}}
+        state: present
+        update_cache: true
+
+    - name: Installing kubeadm.
+      apt:
+        name: kubeadm={{k8s_version}}
+        state: present
+
+    - name: Copy additional systemd network configuration.
+      copy:
+        src: config/systemd/network/99-default.link
+        dest: /etc/systemd/network/99-default.link
+
+    - name: Reload systemd-udev.
+      service:
+        name: systemd-udevd
+        state: restarted
