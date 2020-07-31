@@ -18,12 +18,6 @@
         regexp: '10.244.0.0'
         replace: '10.128.0.0'
 
-    - name: Modifying Flannel object file (Using host-gw).
-      replace:
-        path: /tmp/kube-flannel.yml
-        regexp: 'vxlan'
-        replace: 'host-gw'
-
     - name: Installing Flannel.
       command:
         cmd: kubectl apply -f /tmp/kube-flannel.yml
