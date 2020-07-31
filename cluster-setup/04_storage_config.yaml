@@ -1,4 +1,8 @@
 - hosts: all
+  vars:
+    debian_version_id: 10
+    debian_version: buster
+    debian_arch: amd64
   become: yes
   tasks:
     - name: Installing NFS.
@@ -7,3 +11,24 @@
           - nfs-common
           - nfs4-acl-tools
         state: present
+
+    - name: Installing GlusterFS package keys.
+        apt_key:
+          url: https://download.gluster.org/pub/gluster/glusterfs/LATEST/rsa.pub
+          state: present
+
+    - name: Adding GlusterFS repository.
+        apt_repository:
+          repo: deb https://download.gluster.org/pub/gluster/glusterfs/LATEST/Debian/{{ debian_version_id }}/{{ debian_version }}/apt {{ debian_arch }} main
+
+    - name: GlusterFS install.
+      apt:
+        name:
+          - glusterfs-client
+          - glusterfs-server
+          - glusterfs-common
+
+    - name: Creating GlusterFS mount location.
+      file:
+        name: /srv/glusterfs
+        state: directory

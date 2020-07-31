@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export KUBEVIRT_VERS=v0.26.0
+KUBEVIRT_VERS=v0.26.0
 
 cd $(dirname $0)
 

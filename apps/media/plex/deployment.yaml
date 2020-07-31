@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-plex-data-claim
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 128Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-plex-config-claim
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 24Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+      - name: plex
+        image: plexinc/pms-docker
+        ports:
+          - containerPort: 32400
+            name: "plex-port"
+        env:
+        - name: TZ
+          value: "America/New_York"
+        - name: PLEX_CLAIM
+          valueFrom:
+            secretKeyRef:
+              name: plex-claim-token
+              key: token
+        - name: ALLOWED_NETWORKS
+          value: 10.0.0.0/8,100.64.0.0/10,172.16.0.0/12,192.168.0.0/16
+        volumeMounts:
+          - mountPath: "/data"
+            name: plex-data-volume
+          - mountPath: "/config"
+            name: plex-config-volume
+      volumes:
+      - name: plex-data-volume
+        persistentVolumeClaim:
+          claimName: media-plex-data-claim
+      - name: plex-config-volume
+        persistentVolumeClaim:
+          claimName: media-plex-config-claim
+      securityContext:
+        fsGroup: 1000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+  labels:
+    app: plex
+  name: plex
+  namespace: media
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: plex-media-port
+    port: 32400
+    protocol: TCP
+    targetPort: 32400
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 32400
+  selector:
+    app: plex
+  sessionAffinity: None
+  type: LoadBalancer
+  loadBalancerIP: 10.64.0.16

@@ -4,7 +4,7 @@ metadata:
   name: media-plex-config
 spec:
   capacity:
-    storage: 24Gi
+    storage: 64Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
@@ -13,4 +13,4 @@ spec:
     - nfsvers=4.1
   nfs:
     server: nas.fnptr.net
-    path: "/mnt/labpool/media/config"
+    path: "/mnt/labpool/k8s-volumes/media/plex-config"
