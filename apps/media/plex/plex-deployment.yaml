@@ -69,29 +69,3 @@ spec:
           claimName: media-plex-config-claim
       securityContext:
         fsGroup: 1000
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    metallb.universe.tf/address-pool: default
-  labels:
-    app: plex
-  name: plex
-  namespace: media
-spec:
-  externalTrafficPolicy: Cluster
-  ports:
-  - name: plex-media-port
-    port: 32400
-    protocol: TCP
-    targetPort: 32400
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 32400
-  selector:
-    app: plex
-  sessionAffinity: None
-  type: LoadBalancer
-  loadBalancerIP: 10.64.0.16
