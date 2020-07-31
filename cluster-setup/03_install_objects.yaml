@@ -9,8 +9,14 @@
     - name: Modifying Flannel object file.
       replace:
         path: /tmp/kube-flannel.yml
-        regexp: '10.244.0.0\/16/'
-        replace: '10.128.0.0\/16'
+        regexp: 'extension/v1beta1'
+        replace: 'apps/v1'
+
+    - name: Modifying Flannel object file.
+      replace:
+        path: /tmp/kube-flannel.yml
+        regexp: '10.244.0.0'
+        replace: '10.128.0.0'
 
     - name: Installing Flannel.
       command:
@@ -33,10 +39,6 @@
       args:
         chdir: $HOME
         creates: ~/.kube/metallb-secret.txt
-
-    - name: Force IPVS strict ARP.
-      command:
-        cmd: kubectl get configmap kube-proxy -n kube-system -o yaml | sed -e "s/strictARP: false/strictARP: true/" | kubectl apply -f - -n kube-system
 
     - name: Cleaning up Flannel config.
       file:

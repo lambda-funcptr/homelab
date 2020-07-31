@@ -36,3 +36,4 @@ spec:
     release: plex
   sessionAffinity: None
   type: LoadBalancer
+  loadBalancerIP: 10.64.0.16
