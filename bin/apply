@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cd $(dirname $0)/..
-kubectl apply -Rf kubernetes
+kubectl apply -Rf kubernetes | grep -v "unchanged"
