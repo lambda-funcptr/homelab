@@ -6,17 +6,23 @@
         url: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml 
         dest: /tmp/kube-flannel.yml
 
-    - name: Modifying Flannel object file.
+    - name: Modifying Flannel object file (Correcting Version).
       replace:
         path: /tmp/kube-flannel.yml
         regexp: 'extension/v1beta1'
         replace: 'apps/v1'
-
-    - name: Modifying Flannel object file.
+    
+    - name: Modifying Flannel object file (Changing Subnet).
       replace:
         path: /tmp/kube-flannel.yml
         regexp: '10.244.0.0'
         replace: '10.128.0.0'
+
+    - name: Modifying Flannel object file (Using host-gw).
+      replace:
+        path: /tmp/kube-flannel.yml
+        regexp: 'vxlan'
+        replace: 'host-gw'
 
     - name: Installing Flannel.
       command:

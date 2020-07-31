@@ -13,13 +13,13 @@
         state: present
 
     - name: Installing GlusterFS package keys.
-        apt_key:
-          url: https://download.gluster.org/pub/gluster/glusterfs/LATEST/rsa.pub
-          state: present
+      apt_key:
+        url: https://download.gluster.org/pub/gluster/glusterfs/LATEST/rsa.pub
+        state: present
 
     - name: Adding GlusterFS repository.
-        apt_repository:
-          repo: deb https://download.gluster.org/pub/gluster/glusterfs/LATEST/Debian/{{ debian_version_id }}/{{ debian_version }}/apt {{ debian_arch }} main
+      apt_repository:
+        repo: deb https://download.gluster.org/pub/gluster/glusterfs/LATEST/Debian/{{ debian_version_id }}/{{ debian_version }}/apt {{ debian_arch }} main
 
     - name: GlusterFS install.
       apt:
