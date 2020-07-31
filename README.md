@@ -44,3 +44,4 @@ Thanks to:
 - Lucratiel from Homelab Discord for inspiring me to ~~waste my life on~~ use Kubernetes 
 - Watcher7 from Homelab Discord for telling me about MetalLB
 - Liam Silvers for pointing out that I can't spell "secrets".
+- David S (Lem/This Is Temporary) for trying his best to dissuade me from doing this.
