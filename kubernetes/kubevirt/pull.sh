@@ -4,7 +4,9 @@ KUBEVIRT_VERS=v0.26.0
 
 cd $(dirname $0)
 
-rm -r kubevirt-dist
+echo "kubevirt-dist" > .gitignore
+
+rm -rf kubevirt-dist || true
 mkdir kubevirt-dist
 cd kubevirt-dist
 

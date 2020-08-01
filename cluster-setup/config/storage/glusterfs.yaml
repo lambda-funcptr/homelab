@@ -1,7 +1,0 @@
-gluster:
-  volumes:
-  - name: slow
-    config: {
-    }
-  cluster:
-  - 10.4.0.1

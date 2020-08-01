@@ -1,74 +1,16 @@
 - hosts: all
-  vars_files:
-    - config/storage/glusterfs.yaml
   become: yes
   tasks:
-    - name: Installing NFS.
+    - name: Installing NFS & iSCSI.
       apt:
         name:
           - nfs-common
           - nfs4-acl-tools
+          - open-iscsi
         state: present
 
-    - name: Installing GlusterFS package keys.
-      apt_key:
-        url: https://download.gluster.org/pub/gluster/glusterfs/7/rsa.pub
-        state: present
-
-    # Screw it, I'm hardcoding this one. I'll update it later.
-    - name: Adding GlusterFS repository.
-      apt_repository:
-        repo: deb [arch=amd64] https://download.gluster.org/pub/gluster/glusterfs/8/LATEST/Debian/buster/amd64/apt buster main
-        state: present
-
-    - name: GlusterFS install.
-      apt:
-        name:
-          - glusterfs-client
-          - glusterfs-server
-          - glusterfs-common
-        state: present
-
-    - name: Creating mounts for GlusterFS bricks.
-      mount:
-        path: /data/glusterfs/{{ item.brick }}
-        src: PARTUUID={{ item.uuid }}
-        fstype: xfs
-        state: mounted
-      with_list: "{{ gluster_bricks }}"
-
-    - name: Make sure gluster is started and enabled.
+    - name: Starting the iSCSI initiator.
       service:
-        name: glusterd
-        enabled: yes
+        name: iscsid
         state: started
-
-    - name: GlusterFS volume configuration.
-      gluster_volume:
-        name: "{{ item.name }}"
-        bricks: "{{ gluster_bricks | selectattr('brick', 'match', item.name + '/*') | map(attribute='brick') | product(['/data/glusterfs/']) | map('reverse') | map('join') | product(['/brick']) | map('join') | join(',') }}"
-        cluster: "{{ gluster.cluster }}"
-#        rebalance: yes
-        options: "{{ item.config }}"
-        state: present
-      with_items: "{{ gluster.volumes }}"
-
-    - name: Make sure GlusterFS volumes are started.
-      gluster_volume:
-        name: "{{ item.name }}"
-        state: started
-      with_items: "{{ gluster.volumes }}"
-
-# glusterfs events API integration.
-- hosts: masters
-  become: yes
-  tasks:
-    - name: Enable GlusterFS events service
-      service:
-        name: glustereventsd
         enabled: yes
-        state: restarted
-
-    - name: Sync if GlusterREST exists.
-      shell: gluster-eventsapi sync
-      run_once: true

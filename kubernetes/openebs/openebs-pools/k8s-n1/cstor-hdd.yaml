@@ -1,0 +1,22 @@
+apiVersion: openebs.io/v1alpha1
+kind: StoragePoolClaim
+metadata:
+  name: cstor-hdd
+  annotations:
+    cas.openebs.io/config: |
+      - name: PoolResourceRequests
+        value: |-
+            memory: 4Gi
+            ephemeral-storage: "100Mi"
+      - name: PoolResourceLimits
+        value: |-
+            memory: 8Gi
+spec:
+  name: cstor-hdd
+  type: disk
+  poolSpec:
+    poolType: striped
+  blockDevices:
+    blockDeviceList:
+    - blockdevice-4198004fafd51f3b5d1f1237da4e9057
+    - blockdevice-f4d4a08444b786685b423342657d549f

@@ -71,16 +71,6 @@
         name: kubeadm={{k8s_version}}
         state: present
 
-    - name: Copy additional systemd network configuration.
-      copy:
-        src: config/systemd/network/99-default.link
-        dest: /etc/systemd/network/99-default.link
-
-    - name: Reload systemd-udev.
-      service:
-        name: systemd-udevd
-        state: restarted
-
     - name: Switch to legacy iptables binaries (due to Debian 10 weirdness)
       shell: |
         update-alternatives --set iptables /usr/sbin/iptables-legacy

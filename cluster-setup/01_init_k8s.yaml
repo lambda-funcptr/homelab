@@ -1,4 +1,4 @@
-- hosts: masters
+- hosts: k8s-n1
   become: yes
   tasks:
     - name: Installing kubectl.
@@ -6,16 +6,16 @@
         name: kubectl
         state: present
 
+    - name: Create .kube directory in root fs.
+      file:
+        path: ~/.kube
+        state: directory
+
     - name: Initialize the cluster.
       shell: kubeadm init --pod-network-cidr=10.128.0.0/16 --service-cidr 10.255.0.0/16 --service-dns-domain k8s.fnptr.net >> ~/.kube/cluster_initialized.txt
       args:
         chdir: $HOME
         creates: ~/.kube/cluster_initialized.txt
-
-    - name: Create .kube directory in root fs.
-      file:
-        path: ~/.kube
-        state: directory
 
     - name: Copy admin.conf to remote root's kube directory.
       copy:
