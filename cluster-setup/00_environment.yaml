@@ -3,6 +3,9 @@
     k8s_version: 1.18.6-00
   become: yes
   tasks:
+    - name: Update hostname.
+      shell: hostnamectl set-hostname {{inventory_hostname}}.fnptr.net
+
     - name: Installing ifupdown2 and other network tools.
       apt:
         name:

@@ -1,3 +1,6 @@
+auto lo
+iface lo inet loopback
+
 auto eno4
 iface eno4 inet static
 	address 10.2.0.1/16

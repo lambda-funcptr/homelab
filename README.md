@@ -41,7 +41,8 @@ Things to do with keys and what not. Has its own .gitignore in order to control 
 
 Thanks to:
 - Homelab Discord for making me feel bad about my lab choices regardless of what I do
-- Lucratiel from Homelab Discord for inspiring me to ~~waste my life on~~ use Kubernetes 
-- Watcher7 from Homelab Discord for telling me about MetalLB
+- Lucratiel from te Homelab Discord for inspiring me to ~~waste my life on~~ use Kubernetes 
+- Watcher7 from the Homelab Discord for telling me about MetalLB
+- kroy from the Homelab Discord for being an all around cool dude.
 - Liam Silvers for pointing out that I can't spell "secrets".
 - David S (Lem/This Is Temporary) for trying his best to dissuade me from doing this.
