@@ -5,18 +5,18 @@ if [ -z $1 ]; then
     exit 0;
 fi
 
-cd $(dirname $0)/../kubernetes/storage
+cd $(dirname $0)/../kubernetes
 
 NAME=$1
-NFS_PATH="/"
+NFS_PATH="/mnt/labpool/k8s-volumes/$1"
 SIZE="8Gi"
-NAMESPACE=default
+NAMESPACE="default"
 
 ARGS=$1; shift
 
 while getopts ':p:s:n:' opt; do
     case ${opt} in
-        n)
+      n)
             NAMESPACE=$OPTARG;;
 	    p)
             NFS_PATH=$OPTARG;;
