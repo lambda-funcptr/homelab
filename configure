@@ -2,4 +2,6 @@
 
 find -name pull.sh -type f -exec sh {} \;
 
+kubectl apply -f kubernetes/namespaces
+
 ./secrets/_upload-secrets.sh
