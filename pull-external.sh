@@ -1,1 +1,0 @@
-find -name pull.sh -type f -exec sh {} \;

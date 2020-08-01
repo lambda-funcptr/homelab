@@ -1,0 +1,5 @@
+#!/bin/sh
+
+find -name pull.sh -type f -exec sh {} \;
+
+./secrets/_upload-secrets.sh
