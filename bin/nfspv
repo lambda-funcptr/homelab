@@ -2,6 +2,7 @@
 
 if [ -z $1 ]; then
     echo "Usage: ./bin/nfspv pv-name [-p /path/on/nfs/server] [-s Size]";
+    exit 0;
 fi
 
 cd $(dirname $0)/../kubernetes/storage

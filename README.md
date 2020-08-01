@@ -16,11 +16,11 @@ Where context-independent scripts and their ilk go.
 Commands are mostly self-explanatory. 
 Invoking a script without any arguments will print a short usage explanation.
 
-### > `cluster-setup`
+### > `cluster`
 
-Initial cluster setup, configuration, and also a teardown playbook (`cluster-setup/99_teardown_cluster.yaml`, untested).
+Initial cluster setup, configuration, management, and also a teardown playbook (untested).
 
-The main setup script is located in `cluster-setup/setup.sh`.
+The cluster can be set up via `cluster/run-playbook.sh`.
 
 ### > `kubernetes`
 
@@ -28,10 +28,6 @@ Declarative idempotent kubernetes objects for management/features/whatever.
 It should be fine to do run `kubectl apply -Rf kubernetes` to it.
 
 It's probably a good idea to run this before running anything else (e.g. helm charts).
-
-### > `services`
-
-Probably where I'll put stuff like apps (e.g. Plex, and uh... more Plex) deployments.
 
 ### > `secrets`
 
