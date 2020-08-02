@@ -1,0 +1,23 @@
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachineInstance
+metadata:
+  name: ad-vm
+  namespace: infrastructure
+spec:
+  domain:
+    devices:
+      disks:
+      - disk:
+          bus: virtio
+        name: ad-disk0
+    machine:
+      type: ""
+    resources:
+      requests:
+        memory: 4Gi
+  terminationGracePeriodSeconds: 0
+  volumes:
+  - name: ad-disk0
+    dataVolume:
+      name: infrastructure-ad-disk0-dv
+status: {} 

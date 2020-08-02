@@ -1,7 +1,7 @@
 apiVersion: openebs.io/v1alpha1
 kind: StoragePoolClaim
 metadata:
-  name: cstor-hdd
+  name: cstor-hdd-pool
   annotations:
     cas.openebs.io/config: |
       - name: PoolResourceRequests
@@ -12,7 +12,7 @@ metadata:
         value: |-
             memory: 8Gi
 spec:
-  name: cstor-hdd
+  name: cstor-hdd-pool
   type: disk
   poolSpec:
     poolType: striped
