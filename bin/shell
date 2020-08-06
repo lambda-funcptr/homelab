@@ -1,3 +1,9 @@
 #!/bin/sh
 
-kubectl run shell --rm -i --tty --image alpine -- ash
+NAMESPACE="$1"
+
+if [ -z "$1" ]; then
+    NAMESPACE="default"
+fi
+
+kubectl run -n $NAMESPACE shell --rm -i --tty --image alpine -- ash

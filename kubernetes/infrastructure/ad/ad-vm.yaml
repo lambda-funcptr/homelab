@@ -1,23 +1,56 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: infrastructure-ad-disk0-dv
+  namespace: infrastructure
+spec:
+  source:
+    upload: {}
+  pvc:
+    volumeMode: Block
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 64Gi
+    storageClassName: openebs-sc-hdd
+---
 apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachineInstance
 metadata:
   name: ad-vm
   namespace: infrastructure
+  labels:
+      app: active-directory
 spec:
   domain:
+    cpu:
+      cores: 4
+    resources:
+      requests:
+        memory: 4Gi
     devices:
       disks:
       - disk:
           bus: virtio
         name: ad-disk0
+      interfaces:
+        - bridge: {}
+          name: default
+        - bridge: {}
+          name: infrastructure-ovs0-net
     machine:
       type: ""
-    resources:
-      requests:
-        memory: 4Gi
+  networks:
+    - name: default
+      pod: {}
+    - name: infrastructure-ovs0-net
+      multus:
+        networkName: infrastructure-ovs0
   terminationGracePeriodSeconds: 0
   volumes:
   - name: ad-disk0
     dataVolume:
       name: infrastructure-ad-disk0-dv
 status: {} 
+---

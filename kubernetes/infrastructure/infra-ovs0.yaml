@@ -1,0 +1,14 @@
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: infrastructure-ovs0
+  namespace: infrastructure
+spec:
+  config: '{
+            "cniVersion": "0.3.1",
+            "name": "infrastructure-ovs0",
+            "type": "ovs",
+            "bridge": "ovsbr0",
+            "vlan": 8,
+            "ipam": {}
+        }'

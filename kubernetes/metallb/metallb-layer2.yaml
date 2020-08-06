@@ -6,7 +6,11 @@ metadata:
 data:
   config: |
     address-pools:
-    - name: default
+    - name: servers
       protocol: layer2
       addresses:
-      - 10.64.0.1-10.64.255.250
+      - 10.64.0.1-10.64.255.0
+    - name: services
+      protocol: layer2
+      addresses:
+      - 10.8.0.1-10.8.255.0

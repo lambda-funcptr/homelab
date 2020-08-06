@@ -1,27 +1,47 @@
 - hosts: masters
   become: yes
   tasks:
+    - name: Clone Multus directory
+      git:
+        repo: 'https://github.com/intel/multus-cni.git'
+        dest: '/tmp/k8s-network/multus'
+
     - name: Downloading Flannel object file.
       get_url:
         url: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml 
-        dest: /tmp/kube-flannel.yml
+        dest: /tmp/k8s-network/kube-flannel.yml
 
     - name: Modifying Flannel object file (Correcting Version).
       replace:
-        path: /tmp/kube-flannel.yml
+        path: /tmp/k8s-network/kube-flannel.yml
         regexp: 'extension/v1beta1'
         replace: 'apps/v1'
     
     - name: Modifying Flannel object file (Changing Subnet).
       replace:
-        path: /tmp/kube-flannel.yml
+        path: /tmp/k8s-network/kube-flannel.yml
         regexp: '10.244.0.0'
         replace: '10.128.0.0'
 
+    - name: Modifying Flannel object file (Correcting Interface).
+      replace:
+        path: /tmp/k8s-network/kube-flannel.yml
+        regexp: 'cbr0'
+        replace: 'cni0'
+
     - name: Installing Flannel.
       command:
-        cmd: kubectl apply -f /tmp/kube-flannel.yml
-    
+        cmd: kubectl apply -f /tmp/k8s-network/kube-flannel.yml
+
+    - name: Apply Multus DaemonSet
+      shell: kubectl apply -f /tmp/k8s-network/multus/images/multus-daemonset.yml
+
+    - name: Apply OVS-CNI DaemonSet
+      shell: | 
+        kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/0.40.1/namespace.yaml
+        kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/0.40.1/network-addons-config.crd.yaml
+        kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/0.40.1/operator.yaml
+
     - name: Installing dashboard.
       command:
         cmd: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
@@ -40,9 +60,9 @@
         chdir: $HOME
         creates: ~/.kube/metallb-secret.txt
 
-    - name: Cleaning up Flannel config.
+    - name: Cleaning up remaining config.
       file:
-        name: /tmp/kube-flannel.yml
+        name: /tmp/k8s-network
         state: absent
 
     - name: Remove master node taint.

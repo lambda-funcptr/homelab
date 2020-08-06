@@ -1,6 +1,13 @@
 #!/bin/sh
 
+if [ -z $1 ]; then
+    echo "Provide the name of a service account, please!"
+    exit -1
+fi
+
 screen -X -S kubedash-${UID} quit 
 screen -S kubedash-${UID} -d -m kubectl proxy
 
 echo "Dashboard: http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/"
+echo ""
+kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep $1 | awk '{print $1}') | grep "token:"

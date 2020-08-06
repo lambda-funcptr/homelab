@@ -12,7 +12,16 @@
           - ifupdown2
           - bridge-utils
           - ethtool
+          - openvswitch-common
+          - openvswitch-switch
+          - openvswitch-vtep
         state: present
+
+    - name: Start the OVS switch service.
+      service:
+        name: openvswitch-switch
+        state: started
+        enabled: yes
 
     - name: Pushing network configuration to the nodes.
       copy:
