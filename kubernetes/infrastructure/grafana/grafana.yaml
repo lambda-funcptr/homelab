@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: infrastructure
+  labels:
+    app: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana
+        ports:
+          - containerPort: 3000
+            name: "graphana"
+        volumeMounts:
+        - name: grafana-config
+          mountPath: /config/
+        env:
+        - name: GF_INSTALL_PLUGINS
+          value: "grafana-kubernetes-app,grafana-simple-json-datasource"
+        - name: GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION
+          value: "true"
+        - name: GF_AUTH_LDAP_ENABLED
+          value: "true"
+        - name: GF_AUTH_LDAP_CONFIG_FILE
+          value: "/config/ldap.toml"
+        - name: GF_AUTH_LDAP_ALLOW_SIGN_UP
+          value: "true"
+        - name: LDAP_AUTHBIND_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ldap-authbind
+              key: password
+      volumes:
+        - name: grafana-config
+          configMap:
+            name: grafana-config
