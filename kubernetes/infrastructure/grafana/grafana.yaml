@@ -1,3 +1,19 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: infrastructure-grafana-pvc
+  namespace: infrastructure
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 32Gi
+  selector:
+    matchLabels:
+      app: grafana
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,9 +40,11 @@ spec:
         volumeMounts:
         - name: grafana-config
           mountPath: /config/
+        - name: grafana-data
+          mountPath: /var/lib/grafana
         env:
         - name: GF_INSTALL_PLUGINS
-          value: "grafana-kubernetes-app,grafana-simple-json-datasource"
+          value: ""
         - name: GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION
           value: "true"
         - name: GF_AUTH_LDAP_ENABLED
@@ -44,3 +62,6 @@ spec:
         - name: grafana-config
           configMap:
             name: grafana-config
+        - name: grafana-data
+          persistentVolumeClaim:
+            claimName: infrastructure-grafana-pvc

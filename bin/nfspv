@@ -1,14 +1,13 @@
 #!/bin/bash
 
 if [ -z $1 ]; then
-    echo "Usage: ./bin/nfspv pv-name [-p /path/on/nfs/server] [-s Size]";
+    echo "Usage: ./bin/nfspv pv-name [-n namespace] [-p /path/on/nfs/server] [-s Size]";
     exit 0;
 fi
 
 cd $(dirname $0)/../kubernetes
 
 NAME=$1
-NFS_PATH="/mnt/labpool/k8s-volumes/$1"
 SIZE="8Gi"
 NAMESPACE="default"
 
@@ -24,6 +23,8 @@ while getopts ':p:s:n:' opt; do
             SIZE=$OPTARG;;
 	esac
 done
+
+NFS_PATH="/mnt/labpool/k8s-volumes/$NAMESPACE/$NAME"
 
 shift $((OPTIND -1))
 
@@ -47,3 +48,5 @@ spec:
     server: nas.fnptr.net
     path: "$NFS_PATH"
 EOF
+
+ssh root@nas.fnptr.net -i ../secrets/ansible "mkdir -p $NFS_PATH; chown nobody:nogroup /mnt/labpool/k8s-volumes/$NAMESPACE; chown -R nobody:nogroup $NFS_PATH"

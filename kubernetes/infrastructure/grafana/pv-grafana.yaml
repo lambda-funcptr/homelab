@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: infrastructure-grafana
+  labels:
+    app: grafana
+spec:
+  capacity:
+    storage: 64Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    server: nas.fnptr.net
+    path: "/mnt/labpool/k8s-volumes/infrastructure/grafana"

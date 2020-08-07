@@ -4,22 +4,18 @@ metadata:
   annotations:
     metallb.universe.tf/address-pool: servers
   labels:
-    app: plex
-  name: plex
-  namespace: media
+    app: grafana
+  name: grafana
+  namespace: infrastructure
 spec:
   externalTrafficPolicy: Cluster
   ports:
-  - name: plex-media-port
-    port: 32400
-    protocol: TCP
-    targetPort: 32400
-  - name: http
+  - name: grafana-port
     port: 80
     protocol: TCP
-    targetPort: 32400
+    targetPort: 3000
   selector:
-    app: plex
+    app: grafana
   sessionAffinity: None
   type: LoadBalancer
-  loadBalancerIP: 10.64.0.16
+  loadBalancerIP: 10.8.1.0
