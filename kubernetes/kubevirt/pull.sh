@@ -4,11 +4,11 @@ KUBEVIRT_VERS=v0.26.0
 
 cd $(dirname $0)
 
-echo "kubevirt-dist" > .gitignore
+echo "_kubevirt-dist" > .gitignore
 
-rm -rf kubevirt-dist || true
-mkdir kubevirt-dist
-cd kubevirt-dist
+rm -rf _kubevirt-dist || true
+mkdir _kubevirt-dist
+cd _kubevirt-dist
 
 # Pull kubevirt itself.
 wget https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_VERS}/kubevirt-operator.yaml -O 00_kubevirt-operator.yaml

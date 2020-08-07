@@ -2,11 +2,11 @@
 
 cd $(dirname $0)
 
-echo "openebs-dist" > .gitignore
+echo "_openebs-dist" > .gitignore
 
-rm -rf openebs-dist || true
-mkdir openebs-dist
-cd openebs-dist
+rm -rf _openebs-dist || true
+mkdir _openebs-dist
+cd _openebs-dist
 
 # Pull kubevirt itself.
 wget https://openebs.github.io/charts/openebs-operator.yaml
