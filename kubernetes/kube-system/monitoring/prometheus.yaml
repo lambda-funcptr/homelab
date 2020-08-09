@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
-  namespace: infrastructure
+  namespace: kube-system
   labels:
     app: prometheus
 spec:
@@ -15,7 +15,7 @@ spec:
       labels:
         app: prometheus
     spec:
-      serviceAccountName: prometheus
+      serviceAccountName: monitor
       containers:
         - name: prometheus
           image: prom/prometheus

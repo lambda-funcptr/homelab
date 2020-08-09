@@ -4,7 +4,7 @@ metadata:
   name: prometheus-conf
   labels:
     name: prometheus-conf
-  namespace: infrastructure
+  namespace: kube-system
 data:
   prometheus.yml: |-
     global:
@@ -111,6 +111,3 @@ data:
         - source_labels: [__meta_kubernetes_service_name]
           action: replace
           target_label: kubernetes_name
-
-      - job_name: 'kubernetes-state-metrics'
-        
