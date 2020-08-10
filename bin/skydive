@@ -1,0 +1,18 @@
+#!/bin/sh
+
+wget https://raw.githubusercontent.com/skydive-project/skydive/master/contrib/kubernetes/skydive.yaml -O /tmp/skydive.yaml
+
+sed -i 's/extensions\/v1beta1/apps\/v1/g' /tmp/skydive.yaml
+
+kubectl apply -f /tmp/skydive.yaml
+
+kubectl wait --for=condition=Ready service/skydive-analyzer
+
+kubectl port-forward service/skydive-analyzer 8082:8082
+
+echo "Skydive started and available at http://localhost:8082"
+read -s -n 1 -p "Press any key to terminate"
+
+kubectl delete -f /tmp/skydive.yaml
+
+rm /tmp/skydive.yaml

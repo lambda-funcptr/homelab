@@ -1,0 +1,7 @@
+- hosts: "{{ target | default('all') }}"
+  become: yes
+  tasks:
+    - name: Reboot Kubelet
+      service:
+        name: kubelet
+        state: restarted

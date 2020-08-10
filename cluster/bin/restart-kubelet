@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ -z $1 ]; then
+    echo "Usage: $0 node-inventory-name";
+    exit 0
+fi
+
+cd $(dirname $0)/..
+
+ansible-playbook -i k8s-hosts.yaml --private-key ../secrets/ansible misc-playbooks/restart_kubelet.yaml --extra-vars "target=$1"

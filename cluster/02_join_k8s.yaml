@@ -9,8 +9,11 @@
 - hosts: workers
   become: yes
   tasks:
-    - debug:
-        var: hostvars
+    - name: Check the node is already joined
+      stat:
+        path: ~/.kube/cluster_join.txt
+      register: joined
 
     - name: Join kubernetes cluster.
-      shell: "{{ hostvars['k8s-n1'].join_cmd.stdout }} >> ~/.kube/cluster_join.txt"
+      shell: "{{ hostvars['k8s-n1'].joincmd.stdout }} >> ~/.kube/cluster_join.txt"
+      when: not joined.stat.exists

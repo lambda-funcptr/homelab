@@ -5,14 +5,6 @@ iface eno4 inet static
 	dns-nameservers 172.16.0.1
 	dns-search fnptr.net
 
-# We need to not do this in the future, and move k8s-n1's storage network to the SFP+ ports.
-allow-ovsbr0 infrastructure
-iface infrastructure inet static
-	address 10.4.0.1/16
-	ovs_options tag=4
-	ovs_type OVSIntPort
-	ovs_bridge ovsbr0
-
 allow-ovsbr0 eno1
 iface eno1 inet static
 	ovs_type OVSPort
@@ -23,3 +15,26 @@ allow-ovs ovsbr0
 iface ovsbr0 inet static
 	ovs_type OVSBridge
 	ovs_ports eno1
+
+
+# We need to not do this in the future, and move k8s-n1's storage network to the SFP+ ports.
+allow-ovsbr0 storage
+iface storage inet static
+	address 10.4.0.1/16
+	ovs_options tag=4
+	ovs_type OVSIntPort
+	ovs_bridge ovsbr0
+	
+allow-ovsbr0 coresvcs
+iface coresvcs inet static
+	address 10.8.255.1/16
+	ovs_options tag=8
+	ovs_type OVSIntPort
+	ovs_bridge ovsbr0
+
+allow-ovsbr0 services
+iface services inet static
+	address 10.64.255.1/16
+	ovs_options tag=64
+	ovs_type OVSIntPort
+	ovs_bridge ovsbr0

@@ -1,0 +1,22 @@
+#apiVersion: openebs.io/v1alpha1
+#kind: StoragePoolClaim
+#metadata:
+#  name: cstor-ssd-pool
+#  annotations:
+#    cas.openebs.io/config: |
+#      - name: PoolResourceRequests
+#        value: |-
+#            memory: 4Gi
+#            ephemeral-storage: "100Mi"
+#      - name: PoolResourceLimits
+#        value: |-
+#            memory: 8Gi
+#spec:
+#  name: cstor-ssd-pool
+#  type: disk
+#  poolSpec:
+#    poolType: mirrored
+#  blockDevices:
+#    blockDeviceList:
+      # k8s-n1 devices
+      # k8s-n2 devices

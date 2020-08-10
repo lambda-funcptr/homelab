@@ -1,4 +1,4 @@
-- hosts: masters
+- hosts: k8s-n1
   become: yes
   tasks:
     - name: Clone Multus directory
@@ -54,11 +54,17 @@
       command:
         cmd: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
 
-    - name: One-time MetalLB secret generation.
+    - name: Check if MetalLB secret has been generated
+      stat:
+        path: ~/.kube/cluster_join.txt
+      register: metallb-installed
+
+    - name: One-time MetalLB secret generation
       shell: kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)" >> ~/.kube/metallb-secret.txt
       args:
         chdir: $HOME
         creates: ~/.kube/metallb-secret.txt
+      when: not metallb-installed.stat.exists
 
     - name: Cleaning up remaining config.
       file:

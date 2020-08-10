@@ -2,7 +2,7 @@
   become: yes
   tasks:
     - name: Murder kubernetes
-      shell: kubectl reset -f
+      shell: kubeadm reset -f
 
     - name: Cleaning up /etc/kubernetes.
       file:
