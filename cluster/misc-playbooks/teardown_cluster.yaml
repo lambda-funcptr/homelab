@@ -11,5 +11,5 @@
 
     - name: Cleaning up root home.
       file:
-        name: /home/root/.kube
+        name: ~/.kube
         state: absent
