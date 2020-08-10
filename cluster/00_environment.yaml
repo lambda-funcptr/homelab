@@ -3,10 +3,10 @@
     k8s_version: 1.18.6-00
   become: yes
   tasks:
-    - name: Update hostname.
+    - name: Update hostname
       shell: hostnamectl set-hostname {{inventory_hostname}}.fnptr.net
 
-    - name: Installing ifupdown2 and other network tools.
+    - name: Install ifupdown2 and other network tools
       apt:
         name:
           - ifupdown2
@@ -23,16 +23,21 @@
         state: started
         enabled: yes
 
-    - name: Pushing network configuration to the nodes.
+    - name: Push common configuration to the nodes
       copy:
-        src: config/network/{{inventory_hostname}}/interfaces
+        src: config/network/interfaces
         dest: /etc/network/interfaces
+    
+    - name: Push per-machine configuration to the nodes
+      copy:
+        src: config/network/interfaces.d/{{inventory_hostname}}
+        dest: /etc/network/interfaces.d/host
 
     - name: Reloading network configuration
       command:
         cmd: ifreload -a
 
-    - name: Installing Kubernetes dependencies.
+    - name: Installing Kubernetes dependencies
       apt:
         name:
           - apt-transport-https
@@ -86,3 +91,8 @@
         update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
         update-alternatives --set arptables /usr/sbin/arptables-legacy
         update-alternatives --set ebtables /usr/sbin/ebtables-legacy
+
+    - name: Create .kube directory in root user directory.
+      file:
+        path: ~/.kube
+        state: directory

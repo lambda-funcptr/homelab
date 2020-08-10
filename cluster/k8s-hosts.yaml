@@ -2,6 +2,8 @@ all:
   hosts:
     k8s-n1:
       ansible_host: 10.2.0.1
+    k8s-n2:
+      ansible_host: 10.2.0.2
   vars:
     ansible_user: root
     ansible_python_interpreter: /usr/bin/python3
@@ -9,3 +11,6 @@ all:
     masters:
       hosts:
         k8s-n1:
+    workers:
+      hosts:
+        k8s-n2:

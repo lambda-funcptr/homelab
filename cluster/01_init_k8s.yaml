@@ -6,11 +6,6 @@
         name: kubectl
         state: present
 
-    - name: Create .kube directory in root fs.
-      file:
-        path: ~/.kube
-        state: directory
-
     - name: Initialize the cluster.
       shell: kubeadm init --pod-network-cidr=10.128.0.0/16 --service-cidr 10.255.0.0/16 --service-dns-domain k8s.fnptr.net >> ~/.kube/cluster_initialized.txt
       args:
@@ -28,8 +23,3 @@
         src: /etc/kubernetes/admin.conf
         dest: ~/.kube/config
         flat: yes
-
-    - name: Restarting the kubelet service
-      service:
-        name: kubelet
-        state: restarted

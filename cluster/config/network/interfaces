@@ -1,0 +1,18 @@
+auto lo
+iface lo inet loopback
+
+source /etc/network/interfaces.d/host
+
+allow-ovsbr0 coresvcs
+iface coresvcs inet static
+	address 10.8.255.1/16
+	ovs_options tag=8
+	ovs_type OVSIntPort
+	ovs_bridge ovsbr0
+
+allow-ovsbr0 services
+iface services inet static
+	address 10.64.255.1/16
+	ovs_options tag=64
+	ovs_type OVSIntPort
+	ovs_bridge ovsbr0

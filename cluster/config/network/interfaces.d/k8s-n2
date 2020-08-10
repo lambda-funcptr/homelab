@@ -1,0 +1,22 @@
+auto eno4
+iface eno4 inet static
+    address 10.2.0.2/16
+    gateway 10.2.255.254
+    dns-nameservers 172.16.0.1
+    dns-search k8s.fnptr.net
+
+auto eno2
+iface eno2 inet static
+    address 10.4.0.2/16
+
+allow-ovsbr0 bond0
+iface bond0 inet static
+	ovs_type OVSBond
+	ovs_bonds enp68s0f0 enp68s0f1 enp68s0f2 enp68s0f3
+	ovs_bridge ovsbr0
+	ovs_options tag=1 vlan_mode=native-untagged
+
+allow-ovs ovsbr0
+iface ovsbr0 inet static
+	ovs_type OVSBridge
+	ovs_ports bond0

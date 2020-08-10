@@ -1,4 +1,16 @@
+- hosts: k8s-n1
+  become: yes
+  tasks:
+    - name: Generate join command
+      shell: kubeadm token create --print-join-command
+      register: join_cmd
+      run_once: true
+
 - hosts: workers
   become: yes
   tasks:
-    - ping:
+    - debug:
+        var: hostvars
+
+    - name: Join kubernetes cluster.
+      shell: "{{ hostvars['k8s-n1'].join_cmd.stdout }} >> ~/.kube/cluster_join.txt"
