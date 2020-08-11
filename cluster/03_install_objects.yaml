@@ -23,6 +23,12 @@
         regexp: '10.244.0.0'
         replace: '10.128.0.0'
 
+    - name: Modifying Flannel object file (Changing Subnet).
+      replace:
+        path: /tmp/k8s-network/kube-flannel.yml
+        regexp: 'vxlan'
+        replace: 'host-gw'
+
     - name: Modifying Flannel object file (Correcting Interface).
       replace:
         path: /tmp/k8s-network/kube-flannel.yml
@@ -42,10 +48,6 @@
         kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/0.40.1/network-addons-config.crd.yaml
         kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/0.40.1/operator.yaml
 
-    - name: Installing dashboard.
-      command:
-        cmd: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
-
     - name: Creating MetalLB namespace.
       command:
         cmd: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
@@ -56,23 +58,17 @@
 
     - name: Check if MetalLB secret has been generated
       stat:
-        path: ~/.kube/cluster_join.txt
-      register: metallb-installed
+        path: ~/.kube/metallb-secret.txt
+      register: metallb_installed
 
     - name: One-time MetalLB secret generation
       shell: kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)" >> ~/.kube/metallb-secret.txt
       args:
         chdir: $HOME
         creates: ~/.kube/metallb-secret.txt
-      when: not metallb-installed.stat.exists
+      when: not metallb_installed.stat.exists
 
     - name: Cleaning up remaining config.
       file:
         name: /tmp/k8s-network
         state: absent
-
-    - name: Remove master node taint.
-      shell: kubectl taint nodes --all node-role.kubernetes.io/master- >> ~/.kube/removed_taint.txt
-      args:
-        chdir: $HOME
-        creates: ~/.kube/removed_taint.txt

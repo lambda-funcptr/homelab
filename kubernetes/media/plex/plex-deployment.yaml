@@ -10,6 +10,9 @@ spec:
   resources:
     requests:
       storage: 128Gi
+  selector:
+    matchLabels:
+      app: "plex"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -23,6 +26,9 @@ spec:
   resources:
     requests:
       storage: 24Gi
+  selector:
+    matchLabels:
+      app: "plex"
 ---
 apiVersion: apps/v1
 kind: Deployment

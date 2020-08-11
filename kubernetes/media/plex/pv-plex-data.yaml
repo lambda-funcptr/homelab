@@ -2,6 +2,8 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: media-plex-data
+  labels:
+    app: plex
 spec:
   capacity:
     storage: 1024Gi

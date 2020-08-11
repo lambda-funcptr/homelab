@@ -23,3 +23,7 @@
         src: /etc/kubernetes/admin.conf
         dest: ~/.kube/config
         flat: yes
+
+    - name: Installing dashboard.
+      command:
+        cmd: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml

@@ -1,7 +1,27 @@
 - hosts: "{{ target | default('all') }}"
   become: yes
   tasks:
-    - name: Reboot Kubelet
+    - name: Stopping Kubelet
+      service:
+        name: kubelet
+        state: stopped
+
+    - name: Stopping Docker
+      service:
+        name: docker
+        state: stopped
+
+    - name: Reloading iptables
+      shell: |
+        iptables --flush
+        iptables --table nat --flush
+
+    - name: Starting Docker
+      service:
+        name: docker
+        state: restarted
+    
+    - name: Starting Kubelet
       service:
         name: kubelet
         state: restarted

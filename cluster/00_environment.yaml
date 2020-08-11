@@ -6,19 +6,32 @@
     - name: Update hostname
       shell: hostnamectl set-hostname {{inventory_hostname}}.fnptr.net
 
+    - name: Let's make sure everything is well-updated.
+      apt:
+        update_cache: yes
+        upgrade: safe
+
     - name: Install ifupdown2 and other network tools
       apt:
         name:
           - ifupdown2
           - bridge-utils
           - arptables
+          - ebtables
           - ethtool
           - openvswitch-common
           - openvswitch-switch
           - openvswitch-vtep
         state: present
 
-    - name: Start the OVS switch service.
+    - name: Force nf_tables based iptables implementation
+      shell: |
+        update-alternatives --set iptables /usr/sbin/iptables-legacy
+        update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+        update-alternatives --set arptables /usr/sbin/arptables-legacy
+        update-alternatives --set ebtables /usr/sbin/ebtables-legacy
+
+    - name: Start the OVS switch service
       service:
         name: openvswitch-switch
         state: started
@@ -85,13 +98,6 @@
       apt:
         name: kubeadm={{k8s_version}}
         state: present
-
-    - name: Switch to legacy iptables binaries (due to Debian 10 weirdness)
-      shell: |
-        update-alternatives --set iptables /usr/sbin/iptables-legacy
-        update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
-        update-alternatives --set arptables /usr/sbin/arptables-legacy
-        update-alternatives --set ebtables /usr/sbin/ebtables-legacy
 
     - name: Create .kube directory in root user directory.
       file:
