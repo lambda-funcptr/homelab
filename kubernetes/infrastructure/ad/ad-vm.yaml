@@ -20,8 +20,6 @@ kind: VirtualMachine
 metadata:
   name: ad-vm
   namespace: infrastructure
-  labels:
-      app: active-directory
 spec:
   runStrategy: Always
   template:
@@ -29,6 +27,7 @@ spec:
       labels:
         name: infrastructure-ad-disk0-dv
         namespace: infrastructure
+        app: active-directory
     spec:
       domain:
         cpu:
