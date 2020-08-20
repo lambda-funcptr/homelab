@@ -1,0 +1,14 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: openebs-sc-ssd
+  annotations:
+    openebs.io/cas-type: cstor
+    cas.openebs.io/config: |
+      - name: StoragePoolClaim
+        value: "cstor-ssd-pool"
+      - name: ReplicaCount
+        value: "2"
+      - name: FSType
+        value: "xfs"
+provisioner: openebs.io/provisioner-iscsi

@@ -15,8 +15,9 @@ spec:
   name: cstor-hdd-pool
   type: disk
   poolSpec:
-    poolType: striped
+    poolType: mirrored
   blockDevices:
     blockDeviceList:
-    - blockdevice-4198004fafd51f3b5d1f1237da4e9057
-    - blockdevice-f4d4a08444b786685b423342657d549f
+    # k8s-n1
+    - blockdevice-2d7dd3a1c246a57995ffc097c0d3351d
+    - blockdevice-50a2717f214823339c959f574c9bc35e

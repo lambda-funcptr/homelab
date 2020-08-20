@@ -9,7 +9,33 @@
         name: /etc/kubernetes
         state: absent
 
+    - name: Cleaning up /var/lib/cni/
+      file:
+        name: /var/lib/cni
+        state: absent
+
+    - name: Cleaning up /var/lib/kubelet
+      file:
+        name: /var/lib/kubelet
+        state: absent
+
+    - name: Cleaning up /etc/cni/
+      file:
+        name: /etc/cni
+        state: absent
+
     - name: Cleaning up root home.
       file:
         name: ~/.kube
         state: absent
+
+    - name: Flush iptables
+      shell: iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
+
+    - name: Remove kubelet and kubeadm
+      apt:
+        name: 
+          - kubelet
+          - kubeadm
+        state: absent
+        update_cache: true

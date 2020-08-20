@@ -4,5 +4,5 @@ metadata:
   name: cluster
 spec:
   imagePullPolicy: Always
+  multus: {}
   linuxBridge: {}
-  ovs: {}

@@ -14,5 +14,5 @@ spec:
     - hard
     - nfsvers=4.1
   nfs:
-    server: nas.fnptr.net
+    server: 10.4.255.250
     path: "/mnt/labpool/k8s-volumes/media/plex-config"

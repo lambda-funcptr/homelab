@@ -1,0 +1,49 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: multus-cni-config
+  namespace: kube-system
+  labels:
+    app: multus
+    tier: node
+data:
+  cni-conf.json: |
+    {
+      "name": "multus-cni-network",
+      "type": "multus",
+      "capabilities": {
+        "portMappings": true
+      },
+      "delegates": [
+        {
+          "cniVersion": "0.3.1",
+          "name": "default-cni-net",
+          "plugins": [
+            {
+              "name":"kube-router-net",
+              "type":"bridge",
+              "bridge":"kube-bridge",
+              "isDefaultGateway":true,
+              "hairpinMode":true,
+              "ipam": {
+                  "type":"host-local"
+              }
+            },
+            {
+              "type": "portmap",
+              "capabilities": {
+                "portMappings": true
+              }
+            }
+          ],
+        },
+        {
+          "cniVersion": "0.3.1",
+          "name": "labnet",
+          "type": "bridge",
+          "bridge": "br0",
+          "ipam": {}
+        }
+      ],
+      "kubeconfig": "/etc/cni/net.d/multus.d/multus.kubeconfig"
+    }

@@ -1,22 +1,31 @@
-#apiVersion: openebs.io/v1alpha1
-#kind: StoragePoolClaim
-#metadata:
-#  name: cstor-ssd-pool
-#  annotations:
-#    cas.openebs.io/config: |
-#      - name: PoolResourceRequests
-#        value: |-
-#            memory: 4Gi
-#            ephemeral-storage: "100Mi"
-#      - name: PoolResourceLimits
-#        value: |-
-#            memory: 8Gi
-#spec:
-#  name: cstor-ssd-pool
-#  type: disk
-#  poolSpec:
-#    poolType: mirrored
-#  blockDevices:
-#    blockDeviceList:
-      # k8s-n1 devices
-      # k8s-n2 devices
+apiVersion: openebs.io/v1alpha1
+kind: StoragePoolClaim
+metadata:
+  name: cstor-ssd-pool
+  annotations:
+    cas.openebs.io/config: |
+      - name: PoolResourceRequests
+        value: |-
+            memory: 4Gi
+            ephemeral-storage: "100Mi"
+      - name: PoolResourceLimits
+        value: |-
+            memory: 8Gi
+spec:
+  name: cstor-ssd-pool
+  type: disk
+  poolSpec:
+    poolType: mirrored
+  blockDevices:
+    blockDeviceList:
+    # k8s-n1 devices
+    - blockdevice-1fbeb16f68d0e2299a7d7ea6849428b6
+    - blockdevice-8efe931ad11353445e39a10e0dd9afaf
+    # k8s-n2 devices
+    - blockdevice-n2-sda
+    - blockdevice-n2-sdb
+    - blockdevice-n2-sdc
+    - blockdevice-n2-sdd
+# These are mismatched for right now
+#    - blockdevice-002b0e8175b40c124d8264cc5c0cf302 #/dev/sde1
+#    - blockdevice-af6c259c4d2167f0135e9bb5a39480f0 #/dev/sdf1

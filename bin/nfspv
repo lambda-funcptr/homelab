@@ -45,7 +45,7 @@ spec:
     - hard
     - nfsvers=4.1
   nfs:
-    server: nas.fnptr.net
+    server: 10.4.255.250
     path: "$NFS_PATH"
 EOF
 

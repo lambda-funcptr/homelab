@@ -1,6 +1,7 @@
 #!/bin/bash
 
-KUBEVIRT_VERS=v0.26.0
+KUBEVIRT_VERS=v0.32.0
+CDI_VERSION=v1.21.0
 
 cd $(dirname $0)
 
@@ -16,7 +17,6 @@ wget https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_VERS}/kub
 wget https://raw.githubusercontent.com/kubevirt/kubevirt/master/LICENSE -O LICENSE.kubevirt
 
 # Pull kubevirt-CDI for image imports.
-CDI_VERSION=$(curl -s https://github.com/kubevirt/containerized-data-importer/releases/latest | grep -o "v[0-9]\.[0-9]*\.[0-9]*")
 wget https://github.com/kubevirt/containerized-data-importer/releases/download/$CDI_VERSION/cdi-operator.yaml -O 10_cdi-operator.yaml
 wget https://github.com/kubevirt/containerized-data-importer/releases/download/$CDI_VERSION/cdi-cr.yaml -O 11_cdi-operator-cr.yaml
 wget https://raw.githubusercontent.com/kubevirt/containerized-data-importer/master/LICENSE -O LICENSE.cdi

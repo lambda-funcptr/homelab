@@ -1,5 +1,5 @@
 - import_playbook: 00_environment.yaml
 - import_playbook: 01_init_k8s.yaml
 - import_playbook: 02_join_k8s.yaml
-- import_playbook: 03_install_objects.yaml
+- import_playbook: 03_cluster_configure.yaml
 - import_playbook: 04_storage_config.yaml

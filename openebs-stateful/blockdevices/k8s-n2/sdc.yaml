@@ -1,0 +1,31 @@
+apiVersion: openebs.io/v1alpha1
+kind: BlockDevice
+metadata:
+  labels:
+    kubernetes.io/hostname: k8s-n2.fnptr.net
+    ndm.io/managed: "false"
+    ndm.io/blockdevice-type: blockdevice
+  name: blockdevice-n2-sdc
+  namespace: openebs
+spec:
+  capacity:
+    storage: 240057409536
+  details:
+    driveType: SSD
+    model: CT240BX500SSD1
+    vendor: ATA
+  devlinks:
+  - kind: by-id
+    links:
+    - /dev/disk/by-id/scsi-SATA_CT240BX500SSD1_1903E16D7E8A
+  - kind: by-path
+    links:
+    - /dev/disk/by-path/pci-0000:02:00.0-sas-phy1-lun-0
+  filesystem: {}
+  nodeAttributes:
+    nodeName: k8s-n2.fnptr.net
+  partitioned: "No"
+  path: /dev/sdc
+status:
+  claimState: Unclaimed
+  state: Active

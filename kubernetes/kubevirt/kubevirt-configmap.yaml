@@ -5,4 +5,4 @@ metadata:
   namespace: "kubevirt"
 data:
   debug.useEmulation: "false"
-  feature-gates: "LiveMigration"
+  feature-gates: "DataVolumes"
