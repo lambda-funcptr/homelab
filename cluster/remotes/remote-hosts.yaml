@@ -10,7 +10,7 @@ all:
     remotes:
       hosts:
         k8s-r64:
-          ansible_host: "{{ lookup('file', '../../secrets/remotes/' + inventory_hostname) }}"
+          ansible_host: "{{ lookup('file', '../../secrets/remotes/k8s-r64') }}"
           wgsdn_host: 10.2.64.64
       vars:
         ansible_user: ubuntu
