@@ -5,7 +5,7 @@ Although it's just for show (mostly), it should be able to create a working k8s 
 
 Since I don't want to be redistributing portions unmodified other people's code, I've removed them from the git repository via per-directory `.gitignores`.
 
-**In order to pull the required external dependencies, execute** `./pull-external.sh`.
+**In order to pull the required external dependencies, execute** `./configure.sh`.
 
 ## Contents
 
@@ -20,14 +20,21 @@ Invoking a script without any arguments will print a short usage explanation.
 
 Initial cluster setup, configuration, management, and also a teardown playbook (untested).
 
+There's also some playbooks and scripts for setting up remote nodes that get connected via Wireguard + Proxy ARP in there.
+
 The cluster can be set up via `cluster/run-playbook.sh`.
 
 ### > `kubernetes`
 
 Declarative idempotent kubernetes objects for management/features/whatever.
-It should be fine to do run `kubectl apply -Rf kubernetes` to it.
+It should be fine to do run `kubectl apply -Rf kubernetes` to it (`bin/apply` actually does this).
 
 It's probably a good idea to run this before running anything else (e.g. helm charts).
+
+### > `openebs-bd`
+
+Manually specified OpenEBS devices. Probably best if ran only once.
+Not really sure what happens if a block device gets remade, but I don't want to see what happens if a block device gets claimed twice.
 
 ### > `secrets`
 

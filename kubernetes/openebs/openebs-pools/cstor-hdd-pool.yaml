@@ -21,3 +21,6 @@ spec:
     # k8s-n1
     - blockdevice-2d7dd3a1c246a57995ffc097c0d3351d
     - blockdevice-50a2717f214823339c959f574c9bc35e
+    # k8s-n6
+    - blockdevice-2da91607005e46524a0c0c128795e89a
+    - blockdevice-75ee9ec587f9a234a1555a5f72faee1e

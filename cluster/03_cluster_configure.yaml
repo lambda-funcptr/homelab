@@ -5,34 +5,7 @@
       file:
         path: /tmp/k8s-network
         state: directory
-#        
-#    - name: Downloading Flannel object file.
-#      get_url:
-#        url: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml 
-#        dest: /tmp/k8s-network/kube-flannel.yml
-#
-#    - name: Modifying Flannel object file (Correcting Version).
-#      replace:
-#        path: /tmp/k8s-network/kube-flannel.yml
-#        regexp: 'extension/v1beta1'
-#        replace: 'apps/v1'
-#    
-#    - name: Modifying Flannel object file (Changing Subnet).
-#      replace:
-#        path: /tmp/k8s-network/kube-flannel.yml
-#        regexp: '10.244.0.0'
-#        replace: '10.128.0.0'
-#
-#    - name: Modifying Flannel object file (Changing Subnet).
-#      replace:
-#        path: /tmp/k8s-network/kube-flannel.yml
-#        regexp: 'vxlan'
-#        replace: 'host-gw'
-#
-#    - name: Installing Flannel.
-#      command:
-#        cmd: kubectl apply -f /tmp/k8s-network/kube-flannel.yml
-
+  
     - name: Apply OVS-CNI DaemonSet
       shell: | 
         kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/0.40.1/namespace.yaml
@@ -64,10 +37,6 @@
         name: /tmp/k8s-network
         state: absent
 
-#- hosts: all
-#  become: yes
-#  tasks:
-#    - name: Push kubelet configuration to the nodes
-#      copy:
-#        src: config/kubelet/config.yaml
-#        dest: /var/lib/kubelet/config.yaml
+    - name: Set kube-router gobgp listen address
+      shell: kubectl annotate node {{ hostvars[item].inventory_hostname + '.fnptr.net' }} "kube-router.io/bgp-local-addresses={{ hostvars[item].ansible_host }}"
+      with_items: "{{ groups['all'] }}"

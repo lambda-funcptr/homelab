@@ -1,0 +1,9 @@
+#!/bin/sh
+cd $(dirname $0)/../secrets/wireguard
+
+if [ -z $1 ]; then
+    echo "Usage: ./genwgkeys hostname"
+    exit -1;
+fi
+
+wg genkey | tee $1 | wg pubkey > $1.pub

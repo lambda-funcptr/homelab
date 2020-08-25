@@ -1,0 +1,65 @@
+- hosts: remotes
+  become: yes
+  tasks:
+    - name: Check if we've already configured iptables
+      stat:
+        path: /etc/iptables/rules.v4
+      register: iptables
+    
+    - name: Make sure the iptables directory exists
+      file:
+        path: /etc/iptables
+        state: directory
+
+    - name: Restrictive SSH iptables rule
+      iptables:
+        action: append
+        chain: INPUT
+        source: "{{ lookup('file', '../../secrets/remotes/wgsdn') }}"
+        protocol: tcp
+        destination_port: "22"
+        jump: ACCEPT
+      when: not iptables.stat.exists
+
+    - name: Allow wireguard traffic
+      iptables:
+        action: append
+        chain: INPUT
+        protocol: udp
+        destination_port: "51820"
+        jump: ACCEPT
+      when: not iptables.stat.exists
+
+    - name: Wireguard SDN is secure, so we'll allow it all
+      iptables:
+        action: append
+        chain: INPUT
+        in_interface: wgsdn
+        jump: ACCEPT
+      when: not iptables.stat.exists
+
+    - name: Allow established connections
+      iptables:
+        chain: INPUT
+        ctstate: ESTABLISHED,RELATED
+        jump: ACCEPT
+      when: not iptables.stat.exists
+
+    - name: Drop all incoming connections
+      iptables:
+        chain: INPUT
+        policy: DROP
+      when: not iptables.stat.exists
+
+    - name: Save the rules.
+      shell: iptables-save > /etc/iptables/rules.v4
+      when: not iptables.stat.exists
+
+- hosts: remotes
+  become: yes
+  tasks:
+    - name: Enable wireguard
+      service:
+        name: wg-quick@wgsdn
+        state: started
+        enabled: yes

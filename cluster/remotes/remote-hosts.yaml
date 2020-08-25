@@ -1,0 +1,17 @@
+all:
+  children:
+    sdn:
+      hosts:
+        wgsdn:
+          ansible_host: 10.2.0.64
+          wgsdn_host: 10.2.64.254
+          ansible_user: root
+          ansible_python_interpreter: /usr/bin/python3
+    remotes:
+      hosts:
+        k8s-r64:
+          ansible_host: "{{ lookup('file', '../../secrets/remotes/' + inventory_hostname) }}"
+          wgsdn_host: 10.2.64.64
+      vars:
+        ansible_user: ubuntu
+        ansible_python_interpreter: /usr/bin/python3

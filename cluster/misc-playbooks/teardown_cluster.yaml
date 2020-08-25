@@ -29,9 +29,6 @@
         name: ~/.kube
         state: absent
 
-    - name: Flush iptables
-      shell: iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
-
     - name: Remove kubelet and kubeadm
       apt:
         name: 
@@ -39,3 +36,6 @@
           - kubeadm
         state: absent
         update_cache: true
+
+    - name: Reboot
+      reboot:
