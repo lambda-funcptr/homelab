@@ -1,6 +1,16 @@
-- hosts: remotes
+- hosts: remote_workers
   become: yes
   tasks:
+#    - name: Copy over additional netplan (e.g. external IP) configuration
+#      copy:
+#        src: config/netplan/51-network.yaml.{{ inventory_hostname }}
+#        dest: /etc/netplan/51-network.yaml
+#        mode: u=rwx,g=r,o=r
+#      register: netplan_config
+
+#    - name: Applying netplan...
+#      shell: netplan try && netplan apply
+
     - name: Check if we've already configured iptables
       stat:
         path: /etc/iptables/rules.v4
@@ -11,13 +21,11 @@
         path: /etc/iptables
         state: directory
 
-    - name: Restrictive SSH iptables rule
+    - name: Allow traffic from this endpoint
       iptables:
         action: append
         chain: INPUT
-        source: "{{ lookup('file', '../../secrets/remotes/wgsdn') }}"
-        protocol: tcp
-        destination_port: "22"
+        source: "{{ lookup('file', '../secrets/remotes/wgsdn') }}"
         jump: ACCEPT
       when: not iptables.stat.exists
 
@@ -55,9 +63,6 @@
       shell: iptables-save > /etc/iptables/rules.v4
       when: not iptables.stat.exists
 
-- hosts: remotes
-  become: yes
-  tasks:
     - name: Enable wireguard
       service:
         name: wg-quick@wgsdn

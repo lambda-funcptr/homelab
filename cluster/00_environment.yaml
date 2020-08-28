@@ -1,12 +1,16 @@
 - hosts: all
+  become: yes
+  tasks:
+    - name: Update hostname
+      hostname:
+        name: "{{inventory_hostname}}.fnptr.net"
+
+- hosts: all:!sdn
   vars:
     k8s_version: 1.18.8-00
   become: yes
   tasks:
-    - name: Update hostname
-      shell: hostnamectl set-hostname {{inventory_hostname}}.fnptr.net
-
-    - name: Let's make sure everything is well-updated.
+    - name: Make sure each node is up to date
       apt:
         update_cache: yes
         upgrade: safe
@@ -133,6 +137,21 @@
         path: /etc/fstab
         regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
         replace: '# \1'
+
+    
+    - name: Installing NFS & iSCSI.
+      apt:
+        name:
+          - nfs-common
+          - nfs4-acl-tools
+          - open-iscsi
+        state: present
+
+    - name: Starting the iSCSI initiator.
+      service:
+        name: iscsid
+        state: started
+        enabled: yes
 
     - name: Create .kube directory in root user directory.
       file:

@@ -37,6 +37,21 @@
         name: /tmp/k8s-network
         state: absent
 
-    - name: Set kube-router gobgp listen address
-      shell: kubectl annotate node {{ hostvars[item].inventory_hostname + '.fnptr.net' }} "kube-router.io/bgp-local-addresses={{ hostvars[item].ansible_host }}"
-      with_items: "{{ groups['all'] }}"
+    - name: Set kube-router gobgp listen address for remote hosts
+      shell: kubectl annotate --overwrite node {{ hostvars[item].inventory_hostname + '.fnptr.net' }} "kube-router.io/bgp-local-addresses={{ hostvars[item].wgsdn_host }}"
+      with_items: "{{ groups['remote_workers'] }}"
+
+    - name: Set kube-router config for local masters
+      shell: kubectl annotate node --overwrite {{ hostvars[item].inventory_hostname + '.fnptr.net' }} kube-router.io/node.asn=64512 kube-router.io/peer.ips=10.2.0.64 kube-router.io/peer.asns=65000
+      with_items: "{{ groups['masters'] }}"
+
+    - name: Set kube-router config for local hosts
+      shell: kubectl annotate node --overwrite {{ hostvars[item].inventory_hostname + '.fnptr.net' }} kube-router.io/node.asn=64512 kube-router.io/peer.ips=10.2.0.64 kube-router.io/peer.asns=65000
+      with_items: "{{ groups['local_workers'] }}"
+
+    - name: Set kube-router config for remote hosts
+      shell: kubectl annotate node --overwrite {{ hostvars[item].inventory_hostname + '.fnptr.net' }} kube-router.io/node.asn=65064 kube-router.io/peer.ips=100.64.255.254 kube-router.io/peer.asns=65000
+      with_items: "{{ groups['remote_workers'] }}"
+
+    - name: Restart kube-router
+      shell: kubectl -n kube-system rollout restart daemonset kube-router

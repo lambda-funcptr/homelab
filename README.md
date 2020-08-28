@@ -40,6 +40,11 @@ Not really sure what happens if a block device gets remade, but I don't want to 
 
 Things to do with keys and what not. Has its own .gitignore in order to control what gets pushed.
 
+## TODO:
+
+- [ ] Set up a proper SDN solution with point to point wireguard /0 tunnels.
+- [ ] Add in the edits made in the kube-router manifests somewhere.
+
 ## Shoutouts
 
 Thanks to:

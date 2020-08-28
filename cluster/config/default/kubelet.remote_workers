@@ -1,0 +1,1 @@
+KUBELET_EXTRA_ARGS="--node-ip={{wgsdn_host}}"

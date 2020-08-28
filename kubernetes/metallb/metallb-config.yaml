@@ -14,8 +14,3 @@ data:
       protocol: layer2
       addresses:
       - 10.8.0.1-10.8.255.0
-    - name: r64-external
-      protocol: layer2
-      addresses:
-      - 51.81.111.225-51.81.111.231
-      auto-assign: false

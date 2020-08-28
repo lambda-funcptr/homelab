@@ -1,2 +1,0 @@
-- import_playbook: 00_sdn.yaml
-- import_playbook: 01_remotes.yaml
