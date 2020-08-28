@@ -1,0 +1,19 @@
+setup-keymap us us
+setup-hostname -n alpine
+setup-interfaces -a
+ifup -a
+setup-timezone -z America/New_York
+service hostname restart
+rc-update add networking boot
+rc-update add urandom boot
+rc-update add acpid default
+rc-update add crond default
+openrc boot
+openrc default
+setup-apkrepos -f
+setup-sshd -c openssh
+setup-ntp -c chrony
+ERASE_DISKS=/dev/vdb ROOTFS=xfs setup-disk -m sys -s 0 -q /dev/vdb
+mount /dev/vdb3 /mnt
+mkdir -p /mnt/root/.ssh/authorized_keys
+cp /tmp/sshkey /mnt/root/.ssh/authorized_keys
