@@ -1,15 +1,15 @@
 - hosts: remote_workers
   become: yes
   tasks:
-#    - name: Copy over additional netplan (e.g. external IP) configuration
-#      copy:
-#        src: config/netplan/51-network.yaml.{{ inventory_hostname }}
-#        dest: /etc/netplan/51-network.yaml
-#        mode: u=rwx,g=r,o=r
-#      register: netplan_config
+    - name: Copy over additional netplan (e.g. external IP) configuration
+      copy:
+        src: config/netplan/99-bridges.yaml.{{ inventory_hostname }}
+        dest: /etc/netplan/99-bridges.yaml
+        mode: u=rwx,g=r,o=r
+      register: netplan_config
 
-#    - name: Applying netplan...
-#      shell: netplan try && netplan apply
+    - name: Applying netplan...
+      shell: netplan apply
 
     - name: Check if we've already configured iptables
       stat:
