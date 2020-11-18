@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: images-image-store
+  labels:
+    app: image-store
+spec:
+  capacity:
+    storage: 256Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    server: nas.fnptr.net
+    path: "/mnt/labpool/k8s-volumes/images/image-store"

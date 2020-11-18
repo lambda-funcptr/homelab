@@ -1,9 +1,0 @@
-auto lo
-
-auto eth0 
-iface eth0 inet dhcp
-
-auto wgsdn
-iface wgsdn inet manual
-    pre-up wg-quick up wgsdn
-    post-down wg-quick down wgsdn

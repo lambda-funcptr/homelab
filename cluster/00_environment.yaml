@@ -5,7 +5,7 @@
       hostname:
         name: "{{inventory_hostname}}.fnptr.net"
 
-- hosts: all:!sdn
+- hosts: all
   vars:
     k8s_version: 1.18.8-00
   become: yes

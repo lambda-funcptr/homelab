@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: "kubevirt-config"
-  namespace: "kubevirt"
+  namespace: "kube-system"
 data:
   debug.useEmulation: "false"
-  feature-gates: "DataVolumes"
+  feature-gates: "DataVolumes, LiveMigration"

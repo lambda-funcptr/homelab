@@ -1,6 +1,4 @@
 - import_playbook: 00_environment.yaml
-- import_playbook: 01_sdn.yaml
-- import_playbook: 02_setup_remotes.yaml
-- import_playbook: 03_init_k8s.yaml
-- import_playbook: 04_join_k8s.yaml
-- import_playbook: 05_cluster_configure.yaml
+- import_playbook: 01_init_k8s.yaml
+- import_playbook: 02_join_k8s.yaml
+- import_playbook: 03_cluster_configure.yaml

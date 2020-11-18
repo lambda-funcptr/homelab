@@ -1,8 +1,10 @@
 apiVersion: cdi.kubevirt.io/v1beta1
 kind: DataVolume
 metadata:
-  name: infrastructure-ad-disk0-dv
+  name: ad-disk-dv
   namespace: infrastructure
+  labels:
+    app: active-directory
 spec:
   source:
     upload: {}
@@ -20,12 +22,14 @@ kind: VirtualMachine
 metadata:
   name: ad-vm
   namespace: infrastructure
+  labels:
+    app: active-directory
 spec:
   runStrategy: Always
   template:
     metadata:
       labels:
-        name: infrastructure-ad-disk0-dv
+        name: ad-vm
         namespace: infrastructure
         app: active-directory
     spec:
@@ -57,4 +61,4 @@ spec:
       volumes:
       - name: ad-disk0
         dataVolume:
-          name: infrastructure-ad-disk0-dv
+          name: ad-disk-dv

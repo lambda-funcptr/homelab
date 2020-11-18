@@ -1,6 +1,0 @@
-IMAGE_URL="http://dl-cdn.alpinelinux.org/alpine/v3.12/releases/x86_64/alpine-virt-3.12.0-x86_64.iso"
-IMAGE_USER="root"
-IMAGE_PASS="^M"
-IMAGE_SIZE="1Gi"
-SSH_KEY_FILE="~/ssh/id_rsa.pub"
-BUILD_DURATION=300

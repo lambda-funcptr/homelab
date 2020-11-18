@@ -4,10 +4,12 @@ cd $(dirname $0)/../
 
 bin/opt/velero install \
     --provider aws \
-    --plugins velero/velero-plugin-for-aws:v1.0.0 \
-    --bucket kubernetes-backup \
-    --use-volume-snapshots=false \
-    --backup-location-config region=minio,s3ForcePathStyle="true",s3Url=https://10.4.255.250:9000,insecureSkipTLSVerify=true \
-    --secret-file secrets/minio
+    --plugins velero/velero-plugin-for-aws:v1.1.0 \
+    --bucket fnptr-k8s-backup \
+    --backup-location-config region=us-west-000,s3ForcePathStyle="true",s3Url=https://s3.us-west-000.backblazeb2.com \
+    --secret-file secrets/backup/backblaze \
+    --use-restic
 
-bin/opt/velero plugin add openebs/velero-plugin:1.9.0 
+bin/opt/velero plugin add openebs/velero-plugin:latest
+
+kubectl apply -f velero/backblaze-volume-snapshots.yaml

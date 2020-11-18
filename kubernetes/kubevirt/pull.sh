@@ -1,7 +1,7 @@
 #!/bin/bash
 
-KUBEVIRT_VERS=v0.32.0
-CDI_VERSION=v1.21.0
+KUBEVIRT_VERS=v0.34.1
+CDI_VERSION=v1.26.0
 
 cd $(dirname $0)
 

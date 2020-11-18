@@ -6,7 +6,7 @@
       register: join_cmd
       run_once: true
 
-- hosts: local_workers:remote_workers
+- hosts: workers
   become: yes
   tasks:
     - name: Check the node is already joined
@@ -17,15 +17,3 @@
     - name: Join kubernetes cluster.
       shell: "{{ hostvars['k8s-n1'].join_cmd.stdout }} >> ~/.kube/cluster_join.txt"
       when: not joined.stat.exists
-
-- hosts: remote_workers
-  become: yes
-  tasks:
-    - name: Copy over additional kubelet flags
-      template:
-        src: config/default/kubelet.remote_workers
-        dest: /etc/default/kubelet
-
-    - name: Reboot to make sure kubelet is sanely restarted
-      reboot:
-        reboot_timeout: 3600
