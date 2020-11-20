@@ -1,0 +1,8 @@
+auto wgnet
+iface wgnet inet static
+    address 100.64.255.0/16
+    pre-up ip link add dev wgnet type wireguard
+    pre-up wg set wgnet private-key /etc/wireguard/privkey
+    pre-up wg set wgnet listen-port 51820
+    post-up wg addconf wgnet /etc/wireguard/fixed_peers
+    post-up wg addconf wgnet /etc/wireguard/dynamic_peers

@@ -1,0 +1,26 @@
+- hosts: wgcdn
+  become: yes
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - docker.io
+          - git-lfs
+        state: present
+
+    - name: Make sure we're set for git lfs
+      shell: git lfs install
+
+    - name: Clone distmc repo
+      git:
+        repo: "https://github.com/lambda-funcptr/distmc.git"
+        dest: /srv/distmc
+        force: yes
+
+    - name: Create the required distmc docker images
+      shell:
+        cmd: sh create-containers.sh
+        chdir: /srv/distmc
+
+    - name: Start the distmc containers
+      shell: docker start distmc-proxy distmc-nexus

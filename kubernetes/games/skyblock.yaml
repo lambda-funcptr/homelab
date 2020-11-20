@@ -1,0 +1,45 @@
+#kind: PersistentVolumeClaim
+#apiVersion: v1
+#metadata:
+#  name: skyblock-pvc
+#  namespace: games
+#  labels:
+#    app: skyblock
+#spec:
+#  storageClassName: openebs-sc-ssd
+#  accessModes:
+#    - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 64Gi
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: skyblock
+#  namespace: games
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: skyblock
+#  template:
+#    metadata:
+#      labels:
+#        app: skyblock
+#    spec:
+#      containers:
+#        - name: skyblock
+#          image: papermc:latest
+#          imagePullPolicy: "IfNotPresent"
+#          ports:
+#            - containerPort: 25565
+#          volumeMounts:
+#            - mountPath: /data/
+#              name: gamedata
+#      securityContext:
+#        fsGroup: 1000
+#      volumes:
+#        - name: gamedata
+#          persistentVolumeClaim:
+#            claimName: skyblock-pvc

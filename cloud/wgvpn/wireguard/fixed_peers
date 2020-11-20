@@ -1,0 +1,6 @@
+# BEGIN us-east-1.wg.funcptr.org
+[Peer]
+PublicKey = 8L2aIZPxtAfzYtaLnkWAbKS8xgdKmlRlh9y8E6juxW0=
+Endpoint = 51.81.82.212:51820
+AllowedIPs = 100.127.255.0/32
+# END us-east-1.wg.funcptr.org

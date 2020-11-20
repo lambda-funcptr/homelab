@@ -1,0 +1,3 @@
+[submodule "distmc"]
+	path = cloud/distmc
+	url = git@github.com:lambda-funcptr/distmc.git

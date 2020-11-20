@@ -1,0 +1,63 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: matrixdb-pvc
+  namespace: matrix
+  labels:
+    app: synapse
+spec:
+  storageClassName: openebs-sc-ssd
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 64Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matrixdb
+  namespace: matrix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: matrixdb
+  template:
+    metadata:
+      labels:
+        app: matrixdb
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: matrixdb
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: dbvol
+      volumes:
+        - name: dbvol
+          persistentVolumeClaim:
+            claimName: matrixdb-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: matrixdb
+  name: matrixdb
+  namespace: matrix
+spec:
+  ports:
+  - name: pgsql
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: matrixdb
+  sessionAffinity: None

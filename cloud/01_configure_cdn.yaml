@@ -1,0 +1,36 @@
+- hosts: wgcdn
+  become: yes
+  tasks:
+    - name: Install nginx
+      apt:
+        name:
+          - nginx
+          - certbot
+          - git
+          - python3-certbot-nginx
+        state: present
+
+    - name: Remove default nginx site
+      file:
+        state: absent
+        path: /etc/nginx/sites-enabled/default
+ 
+    - name: Copy sites to CDN target
+      copy:
+        src: config/nginx/sites-enabled
+        dest: /etc/nginx
+
+    - name: Clone website
+      git:
+        repo: "https://github.com/lambda-funcptr/funcptr.org"
+        dest: /srv/funcptr.org
+        force: yes
+
+    - name: Enable certbot
+      shell: certbot --nginx --non-interactive -d funcptr.org --agree-tos -m lambda@funcptr.org --no-eff-email --keep-until-expiring
+
+    - name: Start nginx
+      service:
+        name: nginx
+        state: restarted
+        enabled: yes

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: synapse-env
+  namespace: matrix
+  labels:
+    app: synapse
+data:
+  SERVER_NAME: "funcptr.org"
+  SYNAPSE_REPORT_STATS: "no"
+  SYNAPSE_CONFIG_PATH: "/config/homeserver.yaml"
+  UID: "1000"
+  GID: "1000"

@@ -1,0 +1,116 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Update hostname
+      shell: hostnamectl set-hostname {{inventory_hostname}}
+
+    - name: Update all packages
+      apt:
+        update_cache: yes
+        upgrade: safe
+        default_release: stable
+
+    - name: Add testing repo for wireguard
+      apt_repository:
+        repo: deb http://http.us.debian.org/debian/ testing main non-free contrib
+        state: present
+        filename: 'testing'
+
+    - name: Install ifupdown2, wireguard, and unattended-upgrades
+      apt:
+        name:
+          - linux-image-cloud-amd64
+          - wireguard
+          - unattended-upgrades
+          - apt-listchanges
+          - ifupdown2
+        state: present
+        default_release: testing
+      register: wireguard_installed
+
+    - name: Restart if wireguard was installed
+      reboot:
+      when: wireguard_installed.changed
+
+    - name: Configure unattended-upgrades
+      copy:
+        src: config/apt/apt.conf.d/20auto-upgrades
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+
+    - name: Disable swap
+      shell: swapoff -a
+
+    - name: Create /etc/wireguard
+      file:
+        path: /etc/wireguard
+        state: directory
+
+
+- hosts: wgvpn
+  become: yes
+  tasks:
+    - name: Copy over wgvpn wireguard configs
+      copy:
+        src: wgvpn/wireguard
+        dest: /etc
+
+    - name: Copy over wgvpn wireguard keys
+      copy:
+        src: ../secrets/wgvpn/{{inventory_hostname}}
+        dest: /etc/wireguard/privkey
+        mode: 0077
+
+    - name: Copy over per-host interface configuration
+      copy:
+        src: wgvpn/config/network/interfaces.d/{{inventory_hostname}}
+        dest: /etc/network/interfaces.d/99-wireguard
+      register: wireguard_reconfigured
+
+- hosts: wgcdn
+  become: yes
+  tasks:
+    - name: Copy over wgcdn wireguard configs
+      copy:
+        src: wgcdn/wireguard
+        dest: /etc
+
+    - name: Copy over cdn wireguard keys
+      copy:
+        src: ../secrets/wgcdn/{{inventory_hostname}}
+        dest: /etc/wireguard/privkey
+        mode: 0077
+
+    - name: Copy over per-host interface configuration
+      copy:
+        src: wgcdn/config/network/interfaces.d/{{inventory_hostname}}
+        dest: /etc/network/interfaces.d/99-wireguard
+      register: wireguard_reconfigured
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Remove self-peer
+      blockinfile:
+        path: /etc/wireguard/fixed_peers
+        marker: "# {mark} {{inventory_hostname}}"
+        state: absent
+
+    - name: Restart interfaces
+      shell: ifdown -a; ifup -a;
+      when: wireguard_reconfigured
+
+    - name: Disable networking sysctl flags
+      sysctl: 
+        name: "{{item}}"
+        value: "0"
+      with_items:
+        - net.ipv4.ip_forward
+    
+    - name: Enable networking sysctl flags
+      sysctl: 
+        name: "{{item}}"
+        value: "1"
+        sysctl_set: yes
+        state: present
+      with_items:
+        - net.ipv4.ip_forward
