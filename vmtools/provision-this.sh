@@ -1,3 +1,5 @@
 #!/bin/sh
 
-wget https://raw.githubusercontent.com/lambda-funcptr/homelab/master/secrets/ansible.pub -O ~/.authorized_keys
+mkdir -p ~/.ssh
+
+wget https://raw.githubusercontent.com/lambda-funcptr/homelab/master/secrets/ansible.pub -O ~/.ssh/authorized_keys
