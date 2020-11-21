@@ -27,7 +27,7 @@
         force: yes
 
     - name: Enable certbot
-      shell: certbot --nginx --non-interactive -d funcptr.org --agree-tos -m lambda@funcptr.org --no-eff-email --keep-until-expiring
+      shell: certbot --nginx --non-interactive -d funcptr.org --agree-tos -m "{{lookup('file', '../secrets/email')}}" --no-eff-email --keep-until-expiring
 
     - name: Start nginx
       service:
