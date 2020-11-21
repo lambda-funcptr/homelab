@@ -2,6 +2,14 @@
 
 cd $(dirname $0)
 
+echo "Generating local docker repository credentials..."
+
+docker login docker.fnptr.net
+
+kubectl create secret generic -n infrastructure regcred \
+    --from-file=.dockerconfigjson=$(ls ~/.docker/config.json) \
+    --type=kubernetes.io/dockerconfigjson
+
 # Let's make sure the manifest is up to date.
 sh _build-manifest.sh
 

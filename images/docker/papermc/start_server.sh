@@ -4,7 +4,6 @@ if [ -z "EULA" ]; then
     EULA=false
 fi
 
-mkdir -p /data/plugins
 cd /data
 
 cp /srv/papermc/server.jar /data/server.jar
@@ -14,7 +13,8 @@ if [ -e /config ]; then
     cp -R /config/* /data/.
 fi
 
-if [ -e /plugins ]; then
+if [ ! -e /plugins ]; then
+    fetch_plugins.sh
     cp -R /plugins /data
 fi
 
