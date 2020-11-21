@@ -1,0 +1,40 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Copy over docker-registry configuration files
+      copy:
+        src: config/docker-registry
+        dest: /etc/
+
+    - name: Create image storage mount location
+      file:
+        name: /mnt/images
+        state: directory
+
+    - name: Make sure the image storage location is mounted
+      mount:
+        src: nas.fnptr.net:/mnt/labpool/imagestore
+        path: /mnt/images
+        state: mounted
+        fstype: nfs
+    
+    - name: Create registry location
+      file:
+        name: /mnt/images/docker-images
+        state: directory
+
+    - name: Fetch the letsencrypt root ca files.
+      get_url:
+        url: https://letsencrypt.org/certs/isrgrootx1.pem
+        dest: /etc/docker-registry/letsencrypt.crt
+
+    - name: Create docker container
+      docker_container:
+        name: docker-registry
+        image: registry:2
+        restart_policy: unless-stopped
+        published_ports:
+        - "443:443"
+        volumes:
+        - "/mnt/images/docker-images:/data"
+        - "/etc/docker-registry:/etc/docker/registry"

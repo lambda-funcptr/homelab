@@ -1,0 +1,39 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Copy over valid apk repo configuration
+      copy:
+        src: config/apk/repositories
+        dest: /etc/apk/repositories
+
+    - name: Create registry configuration directory
+      file:
+        name: /etc/docker-registry
+        state: directory
+
+    - name: Update cache and update system
+      apk:
+        update_cache: true
+        upgrade: true
+      register: updated
+
+    - name: Reboot the system if packages got updated
+      reboot:
+      when: updated.changed
+
+    - name: Install required packages
+      apk:
+        name:
+          - docker
+          - nfs-utils
+          - docker-py
+          - curl
+          - git
+        update_cache: true
+        state: present
+
+    - name: Start docker
+      service:
+        name: docker
+        enabled: yes
+        state: started

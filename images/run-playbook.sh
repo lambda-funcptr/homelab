@@ -1,7 +1,7 @@
 #!/bin/sh
 # Enter the right directory.
 SETUP_DIR=$(dirname $0)
-PLAYBOOK=00_setup_docker_repo.yaml
+PLAYBOOK=setup.yaml
 
 cd $SETUP_DIR
 

@@ -1,0 +1,39 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Clone acme.sh
+      git:
+        repo: "https://github.com/acmesh-official/acme.sh.git"
+        dest: ~/acme.sh
+        force: yes
+
+    - name: Check for existing certs
+      stat:
+        path: ~/.acme.sh
+      register: acme_status
+
+    - name: Install acme.sh
+      shell:
+        cmd: ./acme.sh --install
+        chdir: ~/acme.sh
+
+    - name: Issue certs via acme.sh
+      shell:
+        cmd: ./acme.sh --issue --dns dns_cf -d docker.fnptr.net -d images.fnptr.net --log ~/acme-log
+        chdir: ~/.acme.sh
+      environment:
+        CF_Token: "{{lookup ('file', '../secrets/cloudflare/dns-token-fnptr-net')}}"
+        CF_Account_ID: "{{lookup ('file', '../secrets/cloudflare/account-id-fnptr-net')}}"
+        CF_Zone_ID: "{{lookup ('file', '../secrets/cloudflare/zone-id-fnptr-net')}}"
+      when: not acme_status.stat.exists
+
+    - name: Install certs
+      shell:
+        cmd: | 
+          ./acme.sh --install-cert -d docker.fnptr.net \
+          --cert-file /etc/docker-registry/cert.pem \
+          --key-file /etc/docker-registry/key.pem \
+          --fullchain-file /etc/docker-registry/fullchain.pem \
+          --reloadcmd "docker restart docker-registry"
+        chdir: ~/acme.sh
+      when: not acme_status.stat.exists
