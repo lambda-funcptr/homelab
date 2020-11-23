@@ -17,9 +17,19 @@
         cmd: ./acme.sh --install
         chdir: ~/acme.sh
 
+    - name: Make sure the certs have somewhere to go
+      file:
+        path: /data/cert
+        state: directory
+
+    - name: Copy reload-certs.sh
+      copy:
+        src: config/harbor/reload-certs.sh
+        dest: ~/reload-certs.sh
+
     - name: Issue certs via acme.sh
       shell:
-        cmd: ./acme.sh --issue --dns dns_cf -d docker.fnptr.net -d images.fnptr.net --log ~/acme-log
+        cmd: ./acme.sh --issue --dns dns_cf -d harbor.fnptr.net --log ~/acme-log
         chdir: ~/.acme.sh
       environment:
         CF_Token: "{{lookup ('file', '../secrets/cloudflare/dns-token-fnptr-net')}}"
@@ -30,10 +40,10 @@
     - name: Install certs
       shell:
         cmd: | 
-          ./acme.sh --install-cert -d docker.fnptr.net \
-          --cert-file /etc/docker-registry/cert.pem \
-          --key-file /etc/docker-registry/key.pem \
-          --fullchain-file /etc/docker-registry/fullchain.pem \
-          --reloadcmd "docker restart docker-registry"
+          ./acme.sh --install-cert -d harbor.fnptr.net \
+          --cert-file /etc/harbor/server.crt \
+          --key-file /etc/harbor/server.key \
+          --fullchain-file /etc/harbor/fullchain.pem \
+          --reloadcmd "sh /root/reload-certs.sh"
         chdir: ~/acme.sh
       when: not acme_status.stat.exists

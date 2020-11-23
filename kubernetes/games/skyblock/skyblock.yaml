@@ -15,13 +15,33 @@ spec:
         app: skyblock
     spec:
       containers:
-        - name: skyblock
-          image: docker.fnptr.net/papermc
-          ports:
-            - containerPort: 25565
-          volumeMounts:
-            - mountPath: /data/
-              name: skyblock-data
+      - name: skyblock
+        image: harbor.fnptr.net/gameservers/papermc:latest
+        ports:
+        - containerPort: 25565
+        env:
+        - name: EULA
+          value: "true"
+        volumeMounts:
+          - mountPath: /data/
+            name: skyblock-data
+      - name: openssh
+        image: harbor.fnptr.net/docker/linuxserver/openssh-server:latest
+        ports:
+        - containerPort: 2222
+        env:
+        - name: USER_NAME
+          value: "ssh"
+        - name: PUBLIC_KEY
+          value: "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBF7fNKAdx8LjUlUAQAloghaLi/YB9fRK5uCA1HBQ7hQMBfG2IxfeeCIgftxyvJDzCoKFfEdWu6lBPFauztuDzPE="
+        volumeMounts:
+          - mountPath: /data
+            name: skyblock-data
+          - mountPath: /config
+            name: skyblock-data
+            subPath: ssh-server-config
+      securityContext:
+        fsGroup: 1000
   volumeClaimTemplates:
   - metadata:
       name: skyblock-data

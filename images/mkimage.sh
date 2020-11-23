@@ -1,32 +1,44 @@
 #!/bin/sh
 
+PUSH=false
+
 cd "$(dirname $0)"
 
+if [ "$1" != "push" ]; then
+    echo "Not pushing images to registry. Use \"./mkimage.sh push\" to push to registry.";
+else
+    echo "Pushing images to registry, please log in."
+    docker login harbor.fnptr.net;
+    PUSH=true
+fi
 
 rm -r logs
 mkdir -p logs
 
-cd docker
-
 build_image() {
-    if [ -e "../logs/$@" ]; then
+    if [ -e "logs/$@" ]; then
         echo "Skipping docker image \"$@\", already up-to-date."
         return;
     fi
+    
+    mkdir -p logs/$@
 
-    cd "$@"
-    echo "Building docker.fnptr.net/$@";
-    docker build --tag docker.fnptr.net/$@ . > ../../logs/$@
-    docker push docker.fnptr.net/$@
+    echo "Building harbor.fnptr.net/$@";
+    docker build --tag harbor.fnptr.net/$@ docker/$@ > logs/$@/logs
+    if [ "$PUSH" == true ]; then
+        echo "Pushing image $@ to harbor..."
+        docker push harbor.fnptr.net/$@
+    fi
     cd ..
 }
 
-for image in $(ls | cat); do
-    IMAGE_DEPENDS=$(cat $image/depends)
-    for dependency in $IMAGE_DEPENDS; do
-        build_image $dependency
+for DOCKERFILE in $(find docker -name "Dockerfile" -type f); do
+    IMAGE_TAG="$(dirname $DOCKERFILE | cut -d'/' -f2-)"
+    IMAGE_DEPENDS=$(cat docker/$IMAGE_TAG/depends)
+    for DEPENDENCY in $IMAGE_DEPENDS; do
+        build_image $DEPENDENCY
     done
-    build_image $image
+    build_image $IMAGE_TAG
 done
 
 docker image prune -f

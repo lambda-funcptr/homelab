@@ -1,3 +1,3 @@
 - import_playbook: 00_setup_host.yaml
-- import_playbook: 01_setup_docker_repo.yaml
-- import_playbook: 02_setup_certs.yaml
+- import_playbook: 01_setup_certs.yaml
+- import_playbook: 02_setup_harbor.yaml

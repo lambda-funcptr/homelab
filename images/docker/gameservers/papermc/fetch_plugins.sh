@@ -4,8 +4,8 @@ if [ -e /config/plugins.list ]; then
     PLUGINS=$(cat /config/plugins.list) 
     
     mkdir -p /plugins
-    for plugin_url in PLUGINS; do
-        $(wget $plugin_url)
+    for PLUGIN_URL in PLUGINS; do
+        $(wget $PLUGIN_URL)
     done
     cd ..
 fi

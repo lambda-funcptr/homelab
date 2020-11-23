@@ -6,5 +6,5 @@ metadata:
   labels:
     app: skyblock
 data:
-  package.list: |
-    https://www.spigotmc.org/resources/iridium-skyblock-1-8-1-16.62480/download?version=367427 -O skyblock
+#  package.list: |
+#    https://www.spigotmc.org/resources/iridium-skyblock-1-8-1-16.62480/download?version=367427

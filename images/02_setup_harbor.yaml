@@ -1,0 +1,18 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Copy over harbor.yml
+      template:
+        src: config/harbor/harbor.yml
+        dest: ~/harbor/harbor.yml
+
+    - name: Check for install status
+      stat:
+        path: ~/harbor-install
+      register: harbor_status
+
+    - name: Install harbor
+      shell:
+        cmd: ./install.sh > ~/harbor-install
+        chdir: ~/harbor
+      when: not harbor_status.stat.exists
