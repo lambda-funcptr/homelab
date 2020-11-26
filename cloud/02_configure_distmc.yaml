@@ -17,6 +17,12 @@
         dest: /srv/distmc
         force: yes
 
+    - name: Stop the old distmc containers
+      shell: docker stop distmc-proxy distmc-nexus
+
+    - name: Remove the old distmc containers
+      shell: docker rm distmc-proxy distmc-nexus
+
     - name: Create the required distmc docker images
       shell:
         cmd: sh create-containers.sh
