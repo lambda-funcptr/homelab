@@ -16,6 +16,12 @@ Where context-independent scripts and their ilk go.
 Commands are mostly self-explanatory. 
 Invoking a script without any arguments will print a short usage explanation.
 
+### > `cloud`
+
+Stuff pertaining to lab-related VPSes or other cloud-related services (mostly OVH right now).
+
+Currently just wgvpn, which is my wireguard vpn and wgcdn, which is my wireguard based CDN mechanism, as well as [funcptr.org].
+
 ### > `cluster`
 
 Initial cluster setup, configuration, management, and also a teardown playbook (untested).
@@ -23,6 +29,19 @@ Initial cluster setup, configuration, management, and also a teardown playbook (
 There's also some playbooks and scripts for setting up remote nodes that get connected via Wireguard + Proxy ARP in there.
 
 The cluster can be set up via `cluster/run-playbook.sh`.
+
+### > `distmc`
+
+Part of my distmc project. It's really dumb. I would not recommend looking at it too hard.
+
+### > `egress`
+
+Part of handling the wgcdn egress.
+
+### > `images`
+
+Custom images for either vms or docker.
+Populates a local harbor repository with images via `mkimage.sh`
 
 ### > `kubernetes`
 
@@ -39,6 +58,14 @@ Not really sure what happens if a block device gets remade, but I don't want to 
 ### > `secrets`
 
 Things to do with keys and what not. Has its own .gitignore in order to control what gets pushed.
+
+### > `velero`
+
+Backups via velero. Unfortunately, OpenEBS won't let me snapshot without more redundancy, so I'll need to expand the lab.
+
+### > `vmtools`
+
+VM provisioning and setup scripts
 
 ## TODO:
 
