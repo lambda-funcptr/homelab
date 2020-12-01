@@ -1,0 +1,30 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install nginx and iptables
+      apk:
+        name:
+          - nginx
+          - nginx-mod-stream
+          - iptables
+        state: present
+
+    - name: Copy nginx config to CDN target
+      copy:
+        src: config/nginx/nginx.conf
+        dest: /etc/nginx/nginx.conf
+ 
+    - name: Copy http config to CDN target
+      copy:
+        src: config/nginx/conf.d
+        dest: /etc/nginx
+
+    - name: Copy stream configs to CDN target
+      copy:
+        src: config/nginx/streams.d
+        dest: /etc/nginx
+
+    - name: Reload nginx
+      service:
+        name: nginx
+        state: reloaded

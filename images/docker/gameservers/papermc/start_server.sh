@@ -24,5 +24,7 @@ if [ -e /plugins ]; then
     cp -a /plugins/. /data/plugins/
 fi
 
-tmux new -s console -d "/usr/lib/jvm/java-11-openjdk/bin/java -jar server.jar $MC_OPTS nogui"
+ln -s /dev/stdout /srv/papermc/log
+
+tmux new -s console -d "/usr/lib/jvm/java-11-openjdk/bin/java $MC_OPTS -jar server.jar nogui > /srv/papermc/log"
 tmux wait-for console

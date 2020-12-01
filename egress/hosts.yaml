@@ -1,0 +1,7 @@
+all:
+  hosts:
+    cdnvpn:
+      ansible_host: 172.16.255.64
+  vars:
+    ansible_user: root
+    ansible_python_interpreter: /usr/bin/python3
