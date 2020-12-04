@@ -17,7 +17,7 @@
  
     - name: Copy sites to CDN target
       copy:
-        src: config/nginx/sites-enabled
+        src: wgcdn/config/nginx/sites-enabled
         dest: /etc/nginx
 
     - name: Clone website

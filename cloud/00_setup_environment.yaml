@@ -1,0 +1,46 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Update hostname
+      shell: hostnamectl set-hostname {{inventory_hostname}}
+
+    - name: Update all packages
+      apt:
+        update_cache: yes
+        upgrade: safe
+        default_release: stable
+
+    - name: Add testing repo for wireguard
+      apt_repository:
+        repo: deb http://http.us.debian.org/debian/ testing main non-free contrib
+        state: present
+        filename: 'testing'
+
+    - name: Install ifupdown2, wireguard, and unattended-upgrades
+      apt:
+        name:
+          - linux-image-cloud-amd64
+          - wireguard
+          - unattended-upgrades
+          - apt-listchanges
+          - ifupdown2
+        state: present
+        default_release: testing
+      register: wireguard_installed
+
+    - name: Restart if wireguard was installed
+      reboot:
+      when: wireguard_installed.changed
+
+    - name: Configure unattended-upgrades
+      copy:
+        src: config/apt/apt.conf.d/20auto-upgrades
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+
+    - name: Disable swap
+      shell: swapoff -a
+
+    - name: Create /etc/wireguard
+      file:
+        path: /etc/wireguard
+        state: directory

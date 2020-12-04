@@ -1,13 +1,13 @@
 all:
   children:
-    wgvpn:
-      hosts:
-        us-east-1.wg.funcptr.org: 
-          ansible_host: 51.81.82.212
     wgcdn:
       hosts:
         us-east-1.cdn.funcptr.org:
           ansible_host: 51.81.83.234
+    wgvpn:
+      hosts:
+        us-east-1.wg.funcptr.org: 
+          ansible_host: 51.81.82.212
   vars:
     ansible_user: debian
     ansible_python_interpreter: /usr/bin/python3
