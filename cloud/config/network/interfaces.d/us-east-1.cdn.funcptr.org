@@ -1,3 +1,10 @@
+auto iface eth0
+iface eth0 inet dhcp
+    post-up ip -6 addr add 2604:2dc0:101:200::d6c/64 dev eth0
+    post-up ip -6 route add default via 2604:2dc0:101:200::1
+    post-down ip -6 addr del 2604:2dc0:101:200::d6c/64 dev eth0
+    post-down ip -6 route del default
+
 auto wgnet
 iface wgnet inet static
     address 100.64.255.0/16

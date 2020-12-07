@@ -1,6 +1,3 @@
-
-
-
 - hosts: wgvpn
   become: yes
   tasks:
@@ -14,12 +11,6 @@
         src: ../secrets/wgvpn/{{inventory_hostname}}
         dest: /etc/wireguard/privkey
         mode: 0077
-
-    - name: Copy over per-host interface configuration
-      copy:
-        src: wgvpn/config/network/interfaces.d/{{inventory_hostname}}
-        dest: /etc/network/interfaces.d/99-wireguard
-      register: wireguard_reconfigured
 
 - hosts: wgcdn
   become: yes
@@ -35,12 +26,6 @@
         dest: /etc/wireguard/privkey
         mode: 0077
 
-    - name: Copy over per-host interface configuration
-      copy:
-        src: wgcdn/config/network/interfaces.d/{{inventory_hostname}}
-        dest: /etc/network/interfaces.d/99-wireguard
-      register: wireguard_reconfigured
-
 - hosts: all
   become: yes
   tasks:
@@ -50,9 +35,10 @@
         marker: "# {mark} {{inventory_hostname}}"
         state: absent
 
-    - name: Restart interfaces
-      shell: ifdown -a; ifup -a;
-      when: wireguard_reconfigured
+    - name: Delete cloudinit interface configuration
+      file:
+        path: /etc/network/interfaces.d/50-cloud-init
+        state: absent
 
     - name: Disable networking sysctl flags
       sysctl: 
@@ -60,6 +46,7 @@
         value: "0"
       with_items:
         - net.ipv4.ip_forward
+        - net.ipv6.conf.all.forwarding
     
     - name: Enable networking sysctl flags
       sysctl: 
@@ -69,3 +56,8 @@
         state: present
       with_items:
         - net.ipv4.ip_forward
+        - net.ipv6.conf.all.forwarding
+
+    - name: Restart interfaces
+      shell: ifdown -a; ifup -a;
+      when: interfaces_reconfigured

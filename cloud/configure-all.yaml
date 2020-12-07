@@ -1,4 +1,4 @@
 - import_playbook: 00_setup_environment.yaml
-- import_playbook: 01_configure_wireguard.yaml
+- import_playbook: 01_configure_networking.yaml
 - import_playbook: 02_configure_cdn.yaml
 - import_playbook: 03_configure_distmc.yaml
