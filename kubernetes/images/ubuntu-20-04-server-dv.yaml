@@ -1,0 +1,19 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: ubuntu-20-04-server-dv
+  namespace: images
+  labels:
+    app: ubuntu
+spec:
+  source:
+    http:
+      url: https://releases.ubuntu.com/20.04/ubuntu-20.04.1-live-server-amd64.iso
+  pvc:
+    volumeMode: Block
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+    storageClassName: openebs-sc-hdd
