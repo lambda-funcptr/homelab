@@ -1,0 +1,7 @@
+all:
+  hosts:
+    omada-controller:
+      ansible_host: 172.16.3.255
+  vars:
+    ansible_user: ubuntu
+    ansible_python_interpreter: /usr/bin/python3

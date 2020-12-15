@@ -1,0 +1,31 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Update hostname
+      shell: hostnamectl set-hostname {{inventory_hostname}}
+
+    - name: Update all packages
+      apt:
+        update_cache: yes
+        upgrade: safe
+      environment:
+        DEBIAN_FRONTEND: noninteractive
+    
+    - name: Configure unattended-upgrades
+      copy:
+        src: ../config/apt/apt.conf.d/20auto-upgrades
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+
+    - name: Install dependencies
+      apt:
+        name:
+          - unattended-upgrades
+          - apt-listchanges
+          - openjdk-8-jre-headless
+          - jsvc
+        state: present
+
+    # If the controller updates, change this.    
+    - name: Attempt to install the controller software
+      apt:
+        deb: https://static.tp-link.com/2020/202012/20201211/omada_v4.2.8_linux_x64.deb
