@@ -2,9 +2,6 @@
 
 cd $(dirname $0)
 
-echo "Generating local docker repository credentials..."
-
-docker login harbor.fnptr.net
 # Let's make sure the manifest is up to date.
 sh _build-manifest.sh
 
