@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mc-events
+  namespace: games
+  labels:
+    app: mc-events
+spec:
+  ports:
+  - port: 25565
+    name: minecraft
+  - port: 2222
+    name: ssh
+  type: LoadBalancer
+  loadBalancerIP: 10.64.30.255
+  selector:
+    app: mc-events
