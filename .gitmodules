@@ -1,3 +1,9 @@
 [submodule "distmc"]
 	path = distmc
 	url = git@github.com:lambda-funcptr/distmc.git
+[submodule "unitbot"]
+	path = unitbot
+	url = git@github.com:lambda-funcptr/unitbot.git
+[submodule "funcptr.org"]
+	path = funcptr.org
+	url = git@github.com:lambda-funcptr/funcptr.org.git
