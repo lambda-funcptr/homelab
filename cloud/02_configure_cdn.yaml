@@ -8,6 +8,7 @@
           - certbot
           - git
           - python3-certbot-nginx
+          - rsync
         state: present
 
     - name: Remove default nginx site
@@ -20,27 +21,7 @@
         src: wgcdn/config/nginx/sites-enabled
         dest: /etc/nginx
 
-    - name: Nuke old site
-      file:
-        state: absent
-        dest: /srv/funcptr.org
-
-    - name: Make directory again
+    - name: Make sure webroot exists.
       file:
         state: directory
         dest: /srv/funcptr.org
-
-    - name: Download and unarchive website
-      unarchive:
-        src: https://github.com/lambda-funcptr/funcptr.org/raw/master/funcptr.org.tar.gz
-        remote_src: yes
-        dest: /srv/funcptr.org
-
-    - name: Enable certbot
-      shell: certbot --nginx --non-interactive -d funcptr.org --agree-tos -m "{{lookup('file', '../secrets/email')}}" --no-eff-email --keep-until-expiring
-
-    - name: Start nginx
-      service:
-        name: nginx
-        state: restarted
-        enabled: yes
