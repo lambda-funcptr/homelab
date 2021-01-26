@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+set -e
 
 echo -n "Password for ubuntu@$1:"
 read -s PASS
