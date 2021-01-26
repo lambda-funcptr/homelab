@@ -1,9 +1,12 @@
-#!/bin/sh
-cd $(dirname $0)/../secrets/wireguard
+#!/bin/bash
 
-if [ -z $1 ]; then
-    echo "Usage: ./genwgkeys hostname"
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Usage: ./genwgkeys [context] hostname"
+    echo "context: either wgcdn or wgvpn."
     exit -1;
 fi
 
-wg genkey | tee $1 | wg pubkey > $1.pub
+cd $(dirname "$0")
+cd "../secrets/$1"
+
+wg genkey | tee "$2" | wg pubkey > "$2.pub"
