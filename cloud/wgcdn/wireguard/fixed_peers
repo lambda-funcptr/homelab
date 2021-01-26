@@ -4,3 +4,10 @@ PublicKey = WdoTBrfBX4T2sWHwkOdcdS9F6yms7QGuk0bEpz9OA1s=
 Endpoint = 51.81.83.234:51820
 AllowedIPs = 100.64.255.0/32
 # END us-east-1.cdn.funcptr.org
+
+# BEGIN master.cdn.funcptr.org
+[Peer]
+PublicKey = YTNp09JKV5n7u1C1T6vjB/MihDtqTTxJ4n1jVfOlsDE=
+Endpoint = 51.81.34.82:51820
+AllowedIPs = 100.64.255.254/32
+# END master.cdn.funcptr.org

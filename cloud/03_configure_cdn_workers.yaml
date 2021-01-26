@@ -1,0 +1,78 @@
+- hosts: wgcdn_workers
+  become: yes
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - nginx
+          - certbot
+          - git
+          - python3-certbot-nginx
+          - lighttpd
+          - rsync
+        state: present
+
+    - name: Remove default nginx site
+      file:
+        state: absent
+        path: /etc/nginx/sites-enabled/default
+ 
+    - name: Copy sites to CDN target
+      copy:
+        src: wgcdn/config/nginx/sites-enabled
+        dest: /etc/nginx
+
+    - name: Copy lighttpd config
+      copy:
+        src: wgcdn/config/lighttpd/lighttpd.conf
+        dest: /etc/lighttpd/lighttpd.conf
+
+    - name: Make sure webroot(s) exists.
+      file:
+        path: /srv/cdn
+        state: directory
+
+    - name: Copy over certs configuration.
+      copy:
+        src: wgcdn/config/certs.cfg
+        dest: /srv/certs.cfg
+      register: certs_cfg
+
+    - name: Copy over cert scripts
+      copy:
+        src: wgcdn/bin
+        dest: /opt/cdn
+        mode: u+rwx
+
+    - name: Run cert script
+      shell: /opt/cdn/bin/fetchcerts.sh
+      when: certs_cfg.changed
+
+    - name: Add renewal script to cronjobs
+      cron:
+        name: Cert renewal script
+        weekday: "3"
+        job: /opt/cdn/bin/renewcerts.sh
+
+    - name: Add rsync key
+      copy:
+        src: ../secrets/cdn-rsync
+        dest: /root/.ssh/cdn-rsync
+        mode: 0700
+
+    - name: Add master to known-hosts
+      known_hosts:
+        name: master.cdn.funcptr.org
+        key: "master.cdn.funcptr.org ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBA+TFCG4dS8/oYNqNqOOtPm0GHt+HRgs/USwdzDG6RMBpvCHG2jZGs5XK7S/GKc4fPyyxmZijIWZR3iujzIOl9E="
+        state: present
+
+    - name: Configure rsync cronjob
+      cron:
+        name: Pull data via rsync
+        minute: "*/5"
+        job: /usr/bin/rsync --delete -r -e "ssh -i /root/.ssh/cdn-rsync" rsync@master.cdn.funcptr.org:/srv/cdn /srv; chmod a+rx /srv/cdn
+
+    - name: Reload nginx
+      service:
+        name: nginx
+        state: reloaded

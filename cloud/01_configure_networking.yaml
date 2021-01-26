@@ -12,7 +12,7 @@
         dest: /etc/wireguard/privkey
         mode: 0077
 
-- hosts: wgcdn
+- hosts: wgcdn_workers:master.cdn.funcptr.org
   become: yes
   tasks:
     - name: Copy over wgcdn wireguard configs
@@ -29,6 +29,12 @@
 - hosts: all
   become: yes
   tasks:
+    - name: Copy over interface files
+      copy:
+        src: config/network/interfaces.d/{{inventory_hostname}}
+        dest: /etc/network/interfaces.d/99-interfaces
+      register: interfaces_reconfigured
+
     - name: Remove self-peer
       blockinfile:
         path: /etc/wireguard/fixed_peers
@@ -60,4 +66,4 @@
 
     - name: Restart interfaces
       shell: ifdown -a; ifup -a;
-      when: interfaces_reconfigured
+      when: interfaces_reconfigured.changed

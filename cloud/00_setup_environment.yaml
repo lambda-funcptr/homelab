@@ -16,14 +16,13 @@
         state: present
         filename: 'testing'
 
-    - name: Install ifupdown2, wireguard, and unattended-upgrades
+    - name: Install wireguard, and unattended-upgrades
       apt:
         name:
           - linux-image-cloud-amd64
           - wireguard
           - unattended-upgrades
           - apt-listchanges
-          - ifupdown2
         state: present
         default_release: testing
       register: wireguard_installed
@@ -44,3 +43,11 @@
       file:
         path: /etc/wireguard
         state: directory
+
+    - name: Check if ifupdown2 is installed
+      package_facts:
+        manager: apt
+
+    - name: Install ifupdown2 and reboot
+      shell: "apt install ifupdown2"
+      when: "not 'ifupdown2' in ansible_facts.packages"

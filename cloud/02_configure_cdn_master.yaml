@@ -1,0 +1,60 @@
+- hosts: master.cdn.funcptr.org
+  become: yes
+  tasks:
+    - name: Install rsyncd
+      apt:
+        name:
+          - rsync
+        state: present
+
+    - name: Create group
+      group:
+        name: sync
+
+    - name: Create user
+      user:
+        name: push
+        comment: Asset push user
+        group: sync
+        password: "!"
+        password_lock: no
+
+    - name: Upload key for push
+      authorized_key:
+        user: push
+        exclusive: yes
+        state: present
+        key: "{{ lookup('file', '../secrets/cdn-push.pub') }}"
+
+    - name: Create rsync user
+      user:
+        name: rsync
+        comment: rsync pull user
+        group: sync
+        password: "!"
+        password_lock: no
+
+    - name: Upload key for rsync user
+      authorized_key:
+        user: rsync
+        state: present
+        key: "{{ lookup('file', '../secrets/cdn-rsync.pub') }}"
+        
+    - name: Create asset file directory
+      file:
+        path: /srv/cdn
+        state: directory
+        owner: push
+        group: sync
+        mode: u=rwx,g=xr,o=xr
+
+    - name: Copy rsyncd configs
+      copy:
+        src: wgcdn/config/rsyncd.conf
+        dest: /etc/rsyncd.conf
+
+    - name: Start rsyncd
+      service:
+        name: rsync
+        state: started
+        enabled: yes

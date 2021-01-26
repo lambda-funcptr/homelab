@@ -1,4 +1,4 @@
-- hosts: wgcdn
+- hosts: wgcdn_workers
   become: yes
   tasks:
     - name: Install required packages

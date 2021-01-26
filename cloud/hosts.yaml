@@ -1,6 +1,9 @@
 all:
+  hosts:
+    master.cdn.funcptr.org:
+      ansible_host: 51.81.34.82
   children:
-    wgcdn:
+    wgcdn_workers:
       hosts:
         us-east-1.cdn.funcptr.org:
           ansible_host: 51.81.83.234

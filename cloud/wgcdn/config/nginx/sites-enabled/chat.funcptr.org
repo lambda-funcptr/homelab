@@ -1,0 +1,17 @@
+server {
+    server_name chat.funcptr.org;
+
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_certificate /etc/letsencrypt/live/funcptr.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/funcptr.org/privkey.pem;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        proxy_pass http://100.64.0.1;
+        proxy_set_header Host   $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}

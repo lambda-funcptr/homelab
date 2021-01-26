@@ -1,5 +1,6 @@
 - import_playbook: 00_setup_environment.yaml
 - import_playbook: 01_configure_networking.yaml
-- import_playbook: 02_configure_cdn.yaml
+- import_playbook: 02_configure_cdn_master.yaml
+- import_playbook: 03_configure_cdn_workers.yaml
 - import_playbook: 03_configure_cdn_ssl.yaml
 - import_playbook: 99_configure_distmc.yaml
