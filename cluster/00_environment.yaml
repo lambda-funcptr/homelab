@@ -7,7 +7,7 @@
 
 - hosts: all
   vars:
-    k8s_version: 1.18.8-00
+    k8s_version: 1.19.0-00
   become: yes
   tasks:
     - name: Make sure each node is up to date
@@ -101,6 +101,11 @@
       dpkg_selections:
         name: kubelet
         selection: hold
+
+    - name: Unholding kubeadm package.
+      dpkg_selections:
+        name: kubeadm
+        selection: install
 
     - name: Installing kubeadm.
       apt:
