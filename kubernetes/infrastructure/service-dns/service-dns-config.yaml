@@ -1,0 +1,27 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: service-dns-config
+  namespace: infrastructure
+  labels:
+    app: service-dns
+data:
+  Corefile: |
+    s.fnptr.net {
+      file /etc/coredns/s.fnptr.net
+    }
+
+  s.fnptr.net: |
+    $ORIGIN s.fnptr.net.
+    $TTL 3600
+    @               3600    IN    SOA     dns.s.fnptr.net.    admin.fnptr.net.    (
+                                                                                  2020020312            ;Serial
+                                                                                  7200                  ;Refresh
+                                                                                  3600                  ;Retry
+                                                                                  604800                ;Expire
+                                                                                  3600                  ;TTL/Minimum
+                                                                                  )
+                    3600    IN    NS      dns.s.fnptr.net.
+
+    media           3600    IN    A       10.64.16.0
+    *.media         3600    IN    A       10.64.16.0
