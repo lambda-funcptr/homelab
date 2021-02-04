@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  namespace: infrastructure
+  annotations:
+    haproxy.org/path-rewrite: /grafana/(.*) /\1
+    haproxy.org/ingress.class: "infrastructure-ingress"
+spec:
+  ingressClassName: infrastructure-ingress
+  tls:
+  - hosts:
+      - monitor.fnptr.net
+    secretName: monitor-cert
+  rules:
+  - host: monitor.fnptr.net
+    http:
+      paths:
+      - path: /grafana
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 80

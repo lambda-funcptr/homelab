@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: statping-data-pvc
+  namespace: infrastructure
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: openebs-sc-hdd
+  resources:
+    requests:
+      storage: 32Gi
+  selector:
+    matchLabels:
+      app: statping
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: statping
+  namespace: infrastructure
+  labels:
+    app: statping
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: statping
+  template:
+    metadata:
+      labels:
+        app: statping
+    spec:
+      containers:
+      - name: statping
+        image: statping/statping
+        ports:
+          - containerPort: 8080
+            name: "statping"
+        env:
+          - name: BASE_PATH
+            value: "ping"
+        volumeMounts:
+        - name: statping-data
+          mountPath: /app
+      volumes:
+        - name: statping-data
+          persistentVolumeClaim:
+            claimName: statping-data-pvc

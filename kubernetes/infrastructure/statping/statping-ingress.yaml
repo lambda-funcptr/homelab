@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: statping-ingress
+  namespace: infrastructure
+  annotations:
+    haproxy.org/ingress.class: "infrastructure-ingress"
+spec:
+  ingressClassName: infrastructure-ingress
+  tls:
+  - hosts:
+      - monitor.fnptr.net
+    secretName: monitor-cert
+  rules:
+  - host: monitor.fnptr.net
+    http:
+      paths:
+      - path: /ping
+        pathType: Prefix
+        backend:
+          service:
+            name: statping
+            port:
+              number: 80
