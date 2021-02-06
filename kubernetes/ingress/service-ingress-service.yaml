@@ -4,12 +4,12 @@ metadata:
   annotations:
     metallb.universe.tf/address-pool: servers
   labels:
-    run: service-ingress
+    app: service-ingress
   name: service-ingress
   namespace: ingress
 spec:
   selector:
-    run: service-ingress
+    app: service-ingress
   ports:
   - name: http
     port: 80
@@ -19,10 +19,6 @@ spec:
     port: 443
     protocol: TCP
     targetPort: 443
-  - name: stat
-    port: 1024
-    protocol: TCP
-    targetPort: 1024
   type: LoadBalancer
   loadBalancerIP: 10.64.16.0
   externalTrafficPolicy: Cluster

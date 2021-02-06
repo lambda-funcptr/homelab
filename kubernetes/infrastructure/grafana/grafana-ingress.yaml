@@ -4,8 +4,7 @@ metadata:
   name: grafana-ingress
   namespace: infrastructure
   annotations:
-    haproxy.org/path-rewrite: /grafana/(.*) /\1
-    haproxy.org/ingress.class: "infrastructure-ingress"
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   ingressClassName: infrastructure-ingress
   tls:

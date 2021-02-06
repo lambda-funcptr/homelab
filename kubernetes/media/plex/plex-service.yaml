@@ -9,7 +9,7 @@ metadata:
   namespace: media
 spec:
   ports:
-  - name: plex-media-port
+  - name: plex
     port: 32400
     protocol: TCP
     targetPort: 32400

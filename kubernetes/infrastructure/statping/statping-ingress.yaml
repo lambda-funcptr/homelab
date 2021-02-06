@@ -4,7 +4,7 @@ metadata:
   name: statping-ingress
   namespace: infrastructure
   annotations:
-    haproxy.org/ingress.class: "infrastructure-ingress"
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   ingressClassName: infrastructure-ingress
   tls:

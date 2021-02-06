@@ -2,27 +2,35 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    run: service-ingress
+    app: service-ingress
   name: service-ingress-controller
   namespace: ingress
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: service-ingress
+      app: service-ingress
   template:
     metadata:
       labels:
-        run: service-ingress
+        app: service-ingress
     spec:
       serviceAccountName: ingress-service-account
       containers:
-      - name: haproxy-ingress
-        image: harbor.fnptr.net/docker/haproxytech/kubernetes-ingress
+      - name: traefik-ingress
+        image: harbor.fnptr.net/docker/library/traefik
         args:
-          - --configmap=ingress/service-ingress-config
-          - --default-backend-service=ingress/ingress-default-backend
-          - --ingress.class=service-ingress
+          - --providers.kubernetesingress=true
+          - --providers.kubernetesingress.ingressclass=service-ingress
+          - --entryPoints.websecure.address=:443
+          - --entryPoints.web.address=:80
+          - --entrypoints.web.http.redirections.entryPoint.to=websecure
+          - --entrypoints.web.http.redirections.entryPoint.scheme=https
+          - --entrypoints.web.http.redirections.entrypoint.permanent=true
+          - --serversTransport.insecureSkipVerify=true
+          - --ping=true
+          - --entryPoints.ping.address=:8082
+          - --ping.entryPoint=ping
         securityContext:
           runAsUser:  1000
           runAsGroup: 1000
@@ -37,32 +45,13 @@ spec:
             memory: "50Mi"
         livenessProbe:
           httpGet:
-            path: /healthz
-            port: 1042
+            path: /ping
+            port: 8082
         ports:
-        - name: http
-          containerPort: 80
         - name: https
           containerPort: 443
-        - name: stat
-          containerPort: 1024
+        - name: ping
+          containerPort: 8082
         env:
         - name: TZ
           value: "America/New_York"
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-      initContainers:
-        - name: sysctl
-          image: busybox:musl
-          command:
-            - /bin/sh
-            - -c
-            - sysctl -w net.ipv4.ip_unprivileged_port_start=0
-          securityContext:
-            privileged: true
