@@ -12,11 +12,23 @@
           - rsync
         state: present
 
+    - name: Create nginx caching location
+      file:
+        state: directory
+        path: /var/cache/cdn
+        owner: www-data
+        group: www-data
+
     - name: Remove default nginx site
       file:
         state: absent
         path: /etc/nginx/sites-enabled/default
- 
+
+    - name: Copy nginx config
+      copy:
+        src: wgcdn/config/nginx/nginx.conf
+        dest: /etc/nginx/nginx.conf
+
     - name: Copy sites to CDN target
       copy:
         src: wgcdn/config/nginx/sites-enabled
