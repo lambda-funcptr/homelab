@@ -4,7 +4,6 @@ metadata:
   name: monitor-cert
   namespace: infrastructure
 spec:
-  # Secret names are always required.
   secretName: monitor-cert
   duration: 2160h # 90d
   renewBefore: 360h # 15d

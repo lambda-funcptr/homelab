@@ -4,7 +4,7 @@ metadata:
   name: plex-ingress
   namespace: media
   annotations:
-    haproxy.org/ingress.class: "service-ingress"
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   rules:
   - host: plex.media.s.fnptr.net
