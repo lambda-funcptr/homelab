@@ -9,7 +9,7 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 128Gi
+      storage: 256Gi
   selector:
     matchLabels:
       app: "plex"
@@ -21,11 +21,11 @@ metadata:
   namespace: media
 spec:
   accessModes:
-    - ReadWriteMany
-  volumeMode: Filesystem
+    - ReadWriteOnce
+  storageClassName: openebs-sc-ssd
   resources:
     requests:
-      storage: 24Gi
+      storage: 128Gi
   selector:
     matchLabels:
       app: "plex"
@@ -47,7 +47,14 @@ spec:
     spec:
       containers:
       - name: plex
-        image: plexinc/pms-docker
+        image: harbor.fnptr.net/docker/plexinc/pms-docker
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "8000m"
+          limits:
+            memory: "16Gi"
+            cpu: "8000m"
         ports:
           - containerPort: 32400
             name: "plex-port"
