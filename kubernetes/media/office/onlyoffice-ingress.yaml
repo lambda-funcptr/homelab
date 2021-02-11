@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: onlyoffice-ingress
+  namespace: media
+  annotations:
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+  - hosts:
+      - office.media.s.fnptr.net
+    secretName: media-cert
+  rules:
+  - host: office.media.s.fnptr.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: onlyoffice
+            port:
+              number: 80

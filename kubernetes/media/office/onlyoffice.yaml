@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: onlyoffice-logs-claim
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 8Gi
+  selector:
+    matchLabels:
+      app: onlyoffice
+      component: log
+  storageClassName: openebs-sc-ssd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onlyoffice
+  namespace: media
+  labels: 
+    app: onlyoffice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onlyoffice
+  template:
+    metadata:
+      labels:
+        app: onlyoffice
+    spec:
+      containers:
+      - name: onlyoffice
+        image: harbor.fnptr.net/docker/onlyoffice/documentserver
+        ports:
+          - containerPort: 80
+            name: "http"
+        env:
+        - name: TZ
+          value: "America/New_York"
+        volumeMounts:
+          - mountPath: "/var/log/onlyoffice"
+            name: onlyoffice-logs
+      volumes:
+      - name: onlyoffice-logs
+        persistentVolumeClaim:
+          claimName: onlyoffice-logs-claim
+      securityContext:
+        fsGroup: 1000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: onlyoffice
+  name: onlyoffice
+  namespace: media
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: onlyoffice
