@@ -9,6 +9,7 @@ spec:
       name: cloudflare-acme-key
     solvers:
     - dns01:
+        cnameStrategy: Follow
         cloudflare:
           apiTokenSecretRef:
             name: cloudflare-api-token-secret

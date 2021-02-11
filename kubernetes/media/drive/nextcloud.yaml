@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: drive-data-claim
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 128Gi
+  selector:
+    matchLabels:
+      app: drive
+      component: data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-config-claim
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 32Gi
+  selector:
+    matchLabels:
+      app: drive
+      component: config
+  storageClassName: openebs-sc-ssd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+  namespace: media
+  labels: 
+    app: drive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drive
+  template:
+    metadata:
+      labels:
+        app: drive
+    spec:
+      containers:
+      - name: nextcloud
+        image: ghcr.io/linuxserver/nextcloud
+        ports:
+          - containerPort: 443
+            name: "https"
+        env:
+        - name: TZ
+          value: "America/New_York"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        volumeMounts:
+          - mountPath: "/data"
+            name: drive-data-volume
+          - mountPath: "/config"
+            name: nextcloud-config-volume
+      volumes:
+      - name: drive-data-volume
+        persistentVolumeClaim:
+          claimName: drive-data-claim
+      - name: nextcloud-config-volume
+        persistentVolumeClaim:
+          claimName: nextcloud-config-claim
+      securityContext:
+        fsGroup: 1000
