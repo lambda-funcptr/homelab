@@ -7,6 +7,11 @@ metadata:
     app: service-dns
 data:
   Corefile: |
+    . {
+      reload
+      erratic
+    }
+
     s.fnptr.net {
       file /etc/coredns/s.fnptr.net
     }
@@ -23,5 +28,6 @@ data:
                                                                                   )
                     3600    IN    NS      dns.s.fnptr.net.
 
+    drive           3600    IN    A       10.64.16.0
     media           3600    IN    A       10.64.16.0
     *.media         3600    IN    A       10.64.16.0
