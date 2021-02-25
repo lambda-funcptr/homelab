@@ -15,5 +15,5 @@
       register: joined
 
     - name: Join kubernetes cluster.
-      shell: "{{ hostvars['k8s-n1'].join_cmd.stdout }} >> ~/.kube/cluster_join.txt"
+      shell: "{{ hostvars['k8s-n1'].join_cmd.stdout }} --cri-socket unix:///var/run/crio/crio.sock >> ~/.kube/cluster_join.txt"
       when: not joined.stat.exists

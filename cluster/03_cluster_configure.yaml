@@ -1,41 +1,24 @@
 - hosts: k8s-n1
   become: yes
+  tasks:  
+    - name: Copy over custom manifests
+      copy:
+        src: operators/manifests
+        dest: /tmp/operator-manifests
+
+- import_playbook: operators/00_cni.yaml
+- import_playbook: operators/01_dashboard.yaml
+- import_playbook: operators/02_openebs.yaml
+- import_playbook: operators/03_kubevirt.yaml
+- import_playbook: operators/04_cert-manager.yaml
+
+- hosts: k8s-n1
+  become: yes
   tasks:
-    - name: Create temporary work directory.
+    - name: Create local registry cert location
       file:
-        path: /tmp/k8s-network
-        state: directory
-  
-    - name: Apply OVS-CNI DaemonSet
-      shell: | 
-        kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/0.40.1/namespace.yaml
-        kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/0.40.1/network-addons-config.crd.yaml
-        kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/0.40.1/operator.yaml
-
-    - name: Creating MetalLB namespace.
-      command:
-        cmd: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-
-    - name: Installing MetalLB.
-      command:
-        cmd: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-
-    - name: Check if MetalLB secret has been generated
-      stat:
-        path: ~/.kube/metallb-secret.txt
-      register: metallb_installed
-
-    - name: One-time MetalLB secret generation
-      shell: kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)" >> ~/.kube/metallb-secret.txt
-      args:
-        chdir: $HOME
-        creates: ~/.kube/metallb-secret.txt
-      when: not metallb_installed.stat.exists
-
-    - name: Cleaning up remaining config.
-      file:
-        name: /tmp/k8s-network
+        path: /tmp/operator-manifests
         state: absent
 
-    - name: Restart kube-router
-      shell: kubectl -n kube-system rollout restart daemonset kube-router
+    - name: Remove master taint # Purely temporary until I get more masters.
+      shell: kubectl taint nodes --all node-role.kubernetes.io/master-

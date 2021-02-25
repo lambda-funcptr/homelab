@@ -1,0 +1,15 @@
+- hosts: k8s-n1
+  become: yes
+  vars:
+    kubevirt_version: "v0.38.1"
+    cdi_version: "v1.30.0"
+  tasks:
+    - name: Setup kubevirt
+      shell: |
+        kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{kubevirt_version}}/kubevirt-operator.yaml > ~/.kube/kubevirt.txt
+        kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/{{kubevirt_version}}/kubevirt-cr.yaml >> ~/.kube/kubevirt
+
+    - name: Install kubevirt CDI
+      shell: |
+        kubectl apply -f https://github.com/kubevirt/containerized-data-importer/releases/download/{{cdi_version}}/cdi-operator.yaml >> ~/.kube/kubevirt-cdi.txt;
+        kubectl apply -f https://github.com/kubevirt/containerized-data-importer/releases/download/{{cdi_version}}/cdi-cr.yaml >> ~/.kube/kubevirt-cdi.txt;

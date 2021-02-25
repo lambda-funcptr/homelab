@@ -1,0 +1,8 @@
+- hosts: k8s-n1
+  become: yes
+  vars:
+    kubernetes_dashboard_ver: "v2.2.0"
+  tasks:
+    - name: Installing dashboard.
+      command:
+        cmd: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/{{kubernetes_dashboard_ver}}/aio/deploy/recommended.yaml

@@ -7,7 +7,7 @@
 
 - hosts: all
   vars:
-    k8s_version: 1.19.0-00
+    k8s_version: 1.20.4-00
   become: yes
   tasks:
     - name: Make sure each node is up to date
@@ -62,34 +62,56 @@
         state: present
         filename: 'kubernetes'
   
-    - name: add Docker apt-key
+    - name: add libcontainer keys
       apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
+        url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key
         state: present
 
-    - name: add Docker's APT repository
+    - name: add CRI-O keys
+      apt_key:
+        url: https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:1.20/xUbuntu_20.04/Release.key
+        state: present
+
+    - name: Add libcontainer repo
       apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /
         state: present
-        filename: 'docker'
+        filename: 'crio'
 
-    - name: Installing Docker.
+    - name: Add CRI-O repo
+      apt_repository:
+        repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.20/xUbuntu_20.04/ /
+
+    - name: Installing CRI-O.
       apt:
-        name: docker-ce
+        name:
+          - cri-o
+          - cri-o-runc
         state: present
         update_cache: true
 
-    - name: Configure Docker
-      copy:
-        src: config/docker/daemon.json
-        dest: /etc/docker/daemon.json
-      register: docker_config
+    - name: Make sure that the CRIO Config directory exists.
+      file:
+        path: /etc/crio/crio.conf.d
+        state: directory
 
-    - name: Restart Docker
+    - name: Configure CRIO
+      copy:
+        src: config/crio/crio.conf.d
+        dest: /etc/crio/crio.conf.d
+      register: crio_config
+
+    - name: Start CRI-O
       service:
-        name: docker
+        name: crio
+        state: started
+        enabled: yes
+
+    - name: Restart CRI-O
+      service:
+        name: crio
         state: restarted
-      when: docker_config.changed
+      when: crio_config.changed
 
     - name: Installing Kubelet.
       apt:
@@ -121,6 +143,11 @@
       modprobe:
         name: br_netfilter
         state: present
+
+    - name: Load overlay
+      modprobe:
+        name: overlay
+        state: present
     
     - name: Enable networking sysctl flags
       sysctl: 
@@ -142,7 +169,6 @@
         path: /etc/fstab
         regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
         replace: '# \1'
-
     
     - name: Installing NFS & iSCSI.
       apt:

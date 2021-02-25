@@ -1,6 +1,0 @@
-{
-    "exec-opts": ["native.cgroupdriver=systemd"],
-    "storage-driver": "overlay2",
-    "iptables": false,
-    "bridge": "none"
-}

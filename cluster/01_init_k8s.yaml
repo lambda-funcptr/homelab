@@ -5,15 +5,22 @@
       apt:
         name: kubectl
         state: present
+    
+    - name: Check if cluster is already initialized
+      stat:
+        path: ~/.kube/cluster_initialized.txt
+      register: cluster_initialized
 
     - name: Initialize the cluster.
       shell: | 
         kubeadm init --pod-network-cidr=10.128.0.0/16 --service-cidr=10.255.0.0/16 \
+                     --cri-socket unix:///var/run/crio/crio.sock \
                      --control-plane-endpoint=k8s.fnptr.net \
                      --service-dns-domain=k8s.fnptr.net >> ~/.kube/cluster_initialized.txt
       args:
         chdir: $HOME
         creates: ~/.kube/cluster_initialized.txt
+      when: not cluster_initialized.stat.exists
 
     - name: Copy admin.conf to remote root's kube directory.
       copy:
@@ -26,21 +33,3 @@
         src: /etc/kubernetes/admin.conf
         dest: ~/.kube/config
         flat: yes
-
-    - name: Installing dashboard.
-      command:
-        cmd: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
-
-      
-    - name: Check kube-router status
-      stat:
-        path: ~/.kube/kube-router.txt
-      register: kube_router
-
-    - name: Switch kube-proxy for kube-router
-      shell: |
-        kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter-all-features.yaml > ~/.kube/kube-router.txt;
-        kubectl -n kube-system delete ds kube-proxy;
-        docker run --privileged -v /lib/modules:/lib/modules --net=host k8s.gcr.io/kube-proxy-amd64 kube-proxy --cleanup;
-      when: not kube_router.stat.exists
-      ignore_errors: yes

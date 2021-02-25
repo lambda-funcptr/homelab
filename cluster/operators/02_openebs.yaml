@@ -1,0 +1,19 @@
+- hosts: k8s-n1
+  become: yes
+  vars:
+    openebs_version: "2.6.0"
+  tasks:
+    - name: Check if openebs is already installed
+      stat:
+        path: ~/.kube/openebs.txt
+      register: openebs_status
+
+    - name: Setup openebs operator
+      shell: |
+        kubectl apply -f https://openebs.github.io/charts/{{openebs_version}}/openebs-operator.yaml > ~/.kube/openebs.txt;
+      when: not openebs_status.stat.exists
+
+    - name: Setup openebs-cstor operator
+      shell: |
+        kubectl apply -f https://openebs.github.io/charts/{{openebs_version}}/cstor-operator.yaml >> ~/.kube/openebs.txt;
+      when: not openebs_status.stat.exists

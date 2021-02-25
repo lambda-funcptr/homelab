@@ -1,0 +1,52 @@
+- hosts: k8s-n1
+  become: yes
+  vars:
+    cluster_addons_ver: "0.47.0"
+    metallb_ver: "v0.9.5"
+  tasks:
+    - name: Check kube-router status
+      stat:
+        path: ~/.kube/kube-router.txt
+      register: kube_router
+
+    - name: Switch kube-proxy for kube-router
+      shell: |
+        kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter-all-features.yaml > ~/.kube/kube-router.txt;
+        kubectl -n kube-system delete ds kube-proxy;
+        kubectl create -f /tmp/operator-manifests/kube-proxy-cleanup.yaml
+      when: not kube_router.stat.exists
+      ignore_errors: yes
+
+    - name: Reboot... k8s-n2 has some especially long boot times
+      reboot:
+        reboot_timeout: 6000
+      when: not kube_router.stat.exists
+
+    - name: Apply OVS-CNI DaemonSet
+      shell: | 
+        kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/{{cluster_addons_ver}}/namespace.yaml
+        kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/{{cluster_addons_ver}}/network-addons-config.crd.yaml
+        kubectl apply -f https://raw.githubusercontent.com/kubevirt/cluster-network-addons-operator/master/manifests/cluster-network-addons/{{cluster_addons_ver}}/operator.yaml
+
+    - name: Creating MetalLB namespace.
+      command:
+        cmd: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/{{metallb_ver}}/manifests/namespace.yaml
+
+    - name: Installing MetalLB.
+      command:
+        cmd: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/{{metallb_ver}}/manifests/metallb.yaml
+
+    - name: Check if MetalLB secret has been generated
+      stat:
+        path: ~/.kube/metallb-secret.txt
+      register: metallb_installed
+
+    - name: One-time MetalLB secret generation
+      shell: kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)" >> ~/.kube/metallb-secret.txt
+      args:
+        chdir: $HOME
+        creates: ~/.kube/metallb-secret.txt
+      when: not metallb_installed.stat.exists
+
+    - name: Restart kube-router
+      shell: kubectl -n kube-system rollout restart daemonset kube-router
