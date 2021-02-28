@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: matrixdb-pvc
+  namespace: matrix
+  labels:
+    app: synapse
+    backup: "true"
+spec:
+  storageClassName: openebs-sc-ssd
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 128Gi

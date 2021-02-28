@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: matrixdb
+  namespace: matrix
+spec:
+  replicas: 1
+  serviceName: "matrixdb"
+  selector:
+    matchLabels:
+      app: matrixdb
+  template:
+    metadata:
+      labels:
+        app: matrixdb
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: matrixdb
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: dbvol
+      volumes:
+        - name: dbvol
+          persistentVolumeClaim:
+            claimName: matrixdb-pvc

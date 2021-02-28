@@ -1,0 +1,31 @@
+apiVersion: cstor.openebs.io/v1
+kind: CStorPoolCluster
+metadata:
+  name: cspc-ssd
+  namespace: openebs
+spec:
+  resources:
+      requests:
+        memory: "1Gi"
+        cpu: "250m"
+      limits:
+        memory: "2Gi"
+        cpu: "500m"
+  pools:
+    - nodeSelector:
+        kubernetes.io/hostname: "k8s-n1.fnptr.net"
+      dataRaidGroups:
+      - blockDevices:
+        - blockDeviceName: "blockdevice-2d7dd3a1c246a57995ffc097c0d3351d"
+        - blockDeviceName: "blockdevice-50a2717f214823339c959f574c9bc35e"
+      poolConfig:
+        dataRaidGroupType: "mirror"
+
+    - nodeSelector:
+        kubernetes.io/hostname: "k8s-n6.fnptr.net"
+      dataRaidGroups:
+      - blockDevices:
+        - blockDeviceName: "blockdevice-2da91607005e46524a0c0c128795e89a"
+        - blockDeviceName: "blockdevice-75ee9ec587f9a234a1555a5f72faee1e"
+      poolConfig:
+        dataRaidGroupType: "mirror"

@@ -1,4 +1,5 @@
 #!/bin/sh
 
 cd $(dirname $0)/..
-kubectl apply -Rf kubernetes | grep -v "unchanged"
+kubectl apply -Rf kubernetes-namespaces
+kubectl apply -Rf k8s | grep -v "unchanged"

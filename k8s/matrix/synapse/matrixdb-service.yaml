@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: matrixdb
+  name: matrixdb
+  namespace: matrix
+spec:
+  ports:
+  - name: pgsql
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: matrixdb
+  sessionAffinity: None

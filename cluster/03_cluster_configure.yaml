@@ -15,10 +15,15 @@
 - hosts: k8s-n1
   become: yes
   tasks:
-    - name: Create local registry cert location
+    - name: Delete custom manifests
       file:
         path: /tmp/operator-manifests
         state: absent
 
     - name: Remove master taint # Purely temporary until I get more masters.
-      shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+      shell: kubectl taint nodes --all node-role.kubernetes.io/master- || true
+    
+    - name: Reboot... k8s-n2 has some especially long boot times
+      reboot:
+        reboot_timeout: 6000
+      when: not kube_router.stat.exists

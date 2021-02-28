@@ -1,0 +1,18 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install isc-dhcp
+      apk:
+        name: dhcp-server-vanilla
+        update_cache: yes
+    
+    - name: Configure dhcpd
+      copy:
+        src: config/dhcp/dhcpd.conf
+        dest: /etc/dhcp/dhcpd.conf
+
+    - name: Start dhcpd
+      service:
+        name: dhcpd
+        enabled: yes
+        state: started

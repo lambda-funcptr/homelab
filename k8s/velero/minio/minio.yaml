@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+  namespace: velero
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  serviceName: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+      - name: minio
+        image: harbor.fnptr.net/docker/minio/minio:latest
+        ports:
+        - containerPort: 9000
+        args:
+          - server /data
+        env:
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: minio
+              key: access-key
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: minio
+              key: access-secret
+        volumeMounts:
+          - mountPath: /data
+            name: minio-data
+  volumeClaimTemplates:
+  - metadata:
+      name:  minio-data
+      namespace: games
+      labels:
+        app: minio
+    spec:
+      storageClassName: openebs-sc-ssd
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 16Gi

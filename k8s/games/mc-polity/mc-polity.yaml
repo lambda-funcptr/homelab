@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mc-polity
+  namespace: games
+  labels:
+    app: mc-polity
+    backup: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mc-polity
+  serviceName: mc-polity
+  template:
+    metadata:
+      labels:
+        app: mc-polity
+        backup: "true"
+    spec:
+      containers:
+      - name: mc-polity
+        image: harbor.fnptr.net/gameservers/papermc:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: "4"
+            memory: "20Gi"
+          requests:
+            cpu: "4"
+            memory: "20Gi"
+        ports:
+        - containerPort: 25565
+        env:
+        - name: EULA
+          value: "true"
+        - name: MC_OPTS
+          value: "-server -XX:+UseG1GC -XX:MaxGCPauseMillis=500 -XX:+UseStringDeduplication -Xmx16G -Xms16G -XX:UseSSE=3"
+        volumeMounts:
+          - mountPath: /data/
+            name: mc-polity-data
+          - mountPath: /config
+            name: mc-polity-config-volume
+      - name: openssh
+        image: harbor.fnptr.net/docker/linuxserver/openssh-server:latest
+        ports:
+        - containerPort: 2222
+        env:
+        - name: USER_NAME
+          value: "ssh"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: PUBLIC_KEY
+          value: "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBF7fNKAdx8LjUlUAQAloghaLi/YB9fRK5uCA1HBQ7hQMBfG2IxfeeCIgftxyvJDzCoKFfEdWu6lBPFauztuDzPE="
+        volumeMounts:
+          - mountPath: /data
+            name: mc-polity-data
+      volumes:
+      - name: mc-polity-config-volume
+        configMap:
+          name: mc-polity-config
+      securityContext:
+        fsGroup: 1000
+  volumeClaimTemplates:
+  - metadata:
+      name: mc-polity-data
+      namespace: games
+      labels:
+        app: mc-polity
+        backup: "true"
+    spec:
+      storageClassName: openebs-sc-ssd
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 64Gi

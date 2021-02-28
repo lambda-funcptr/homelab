@@ -2,8 +2,6 @@
 
 find -name pull.sh -type f -exec sh {} \;
 
-kubectl taint nodes --all node-role.kubernetes.io/master-
-
-kubectl apply -f kubernetes/namespaces
+kubectl apply -f kubernetes-namespaces
 
 ./secrets/_upload-secrets.sh

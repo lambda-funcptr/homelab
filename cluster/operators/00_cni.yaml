@@ -13,14 +13,8 @@
       shell: |
         kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter-all-features.yaml > ~/.kube/kube-router.txt;
         kubectl -n kube-system delete ds kube-proxy;
-        kubectl create -f /tmp/operator-manifests/kube-proxy-cleanup.yaml
       when: not kube_router.stat.exists
       ignore_errors: yes
-
-    - name: Reboot... k8s-n2 has some especially long boot times
-      reboot:
-        reboot_timeout: 6000
-      when: not kube_router.stat.exists
 
     - name: Apply OVS-CNI DaemonSet
       shell: | 

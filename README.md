@@ -43,6 +43,10 @@ Part of handling the wgcdn egress.
 Custom images for either vms or docker.
 Populates a local harbor repository with images via `mkimage.sh`
 
+### > `k8s-ns`
+
+List of kubernetes namespaces. I'm moving it out of kubernetes because of an incident where I deleted all my namespaces.
+
 ### > `kubernetes`
 
 Declarative idempotent kubernetes objects for management/features/whatever.

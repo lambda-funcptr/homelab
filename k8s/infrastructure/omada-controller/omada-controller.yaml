@@ -1,0 +1,90 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: omada-controller-dv
+  namespace: infrastructure
+  labels:
+    app: omada-controller
+    backup: "true"
+spec:
+  source:
+    blank: {}
+  pvc:
+    volumeMode: Block
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 16Gi
+    storageClassName: openebs-sc-ssd
+---
+# Note: things commented out were bootstrap/install media for the VM.
+#apiVersion: cdi.kubevirt.io/v1beta1
+#kind: DataVolume
+#metadata:
+#  name: omada-controller-install-iso-dv
+#  namespace: infrastructure
+#  labels:
+#    app: omada-controller
+#spec:
+#  source:
+#    pvc:
+#      name: ubuntu-20-04-server-dv
+#      namespace: images
+#  pvc:
+#    volumeMode: Block
+#    accessModes:
+#      - ReadWriteOnce
+#    resources:
+#      requests:
+#        storage: 1Gi
+#    storageClassName: openebs-sc-ssd
+---
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: omada-controller
+  namespace: infrastructure
+  labels:
+    app: active-directory
+spec:
+  runStrategy: Always
+  template:
+    metadata:
+      labels:
+        name: omada-controller
+        namespace: infrastructure
+        app: omada-controller
+    spec:
+      domain:
+        cpu:
+          cores: 4
+        resources:
+          requests:
+            memory: 8Gi
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: omada-controller-disk0
+#          - bootOrder: 1
+#            cdrom:
+#              bus: sata
+#            name: install-iso
+          interfaces:
+            - bridge: {}
+              name: labnet-network
+        machine:
+          type: ""
+      networks:
+        - name: labnet-network
+          multus:
+            networkName: network/labnet
+      terminationGracePeriodSeconds: 0
+      volumes:
+      - name: omada-controller-disk0
+        dataVolume:
+          name: omada-controller-dv
+#      - name: install-iso
+#        dataVolume:
+#          name: omada-controller-install-iso-dv

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: service-ingress
+  name: service-ingress-controller
+  namespace: ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-ingress
+  template:
+    metadata:
+      labels:
+        app: service-ingress
+    spec:
+      serviceAccountName: ingress-service-account
+      containers:
+      - name: traefik-ingress
+        image: harbor.fnptr.net/docker/library/traefik
+        imagePullPolicy: Always
+        args:
+          - --providers.kubernetesingress=true
+          - --providers.kubernetesingress.ingressclass=service-ingress
+          - --entryPoints.websecure.address=:443
+          - --entryPoints.web.address=:80
+          - --entrypoints.web.http.redirections.entryPoint.to=websecure
+          - --entrypoints.web.http.redirections.entryPoint.scheme=https
+          - --entrypoints.web.http.redirections.entrypoint.permanent=true
+          - --serversTransport.insecureSkipVerify=true
+          - --ping=true
+          - --entryPoints.ping.address=:8082
+          - --ping.entryPoint=ping
+        securityContext:
+          runAsUser:  1000
+          runAsGroup: 1000
+          capabilities:
+            drop:
+              - ALL
+            add:
+              - NET_BIND_SERVICE
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "50Mi"
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8082
+        ports:
+        - name: https
+          containerPort: 443
+        - name: ping
+          containerPort: 8082
+        env:
+        - name: TZ
+          value: "America/New_York"

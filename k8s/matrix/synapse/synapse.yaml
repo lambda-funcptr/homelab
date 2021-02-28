@@ -1,0 +1,54 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: synapse-data-pvc
+  namespace: matrix
+  labels:
+    app: synapse
+    backup: "false"
+spec:
+  storageClassName: openebs-sc-hdd
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 512Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse
+  namespace: matrix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synapse
+  template:
+    metadata:
+      labels:
+        app: synapse
+    spec:
+      containers:
+        - name: synapse
+          image: matrixdotorg/synapse:latest
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 8008
+          envFrom:
+          - configMapRef:
+              name: synapse-env
+          volumeMounts:
+            - mountPath: /data/
+              name: datavol
+            - mountPath: /config/
+              name: matrix-config
+      securityContext:
+        fsGroup: 1000
+      volumes:
+        - name: datavol
+          persistentVolumeClaim:
+            claimName: synapse-data-pvc
+        - name: matrix-config
+          secret:
+            secretName: synapse-config

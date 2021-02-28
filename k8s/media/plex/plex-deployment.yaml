@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-plex-data-claim
+  namespace: media
+  labels:
+    component: data
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 256Gi
+  selector:
+    matchLabels:
+      app: "plex"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-plex-config-claim
+  namespace: media
+  labels:
+    component: config
+    backup: "true"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: openebs-sc-ssd
+  resources:
+    requests:
+      storage: 128Gi
+  selector:
+    matchLabels:
+      app: "plex"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+      - name: plex
+        image: harbor.fnptr.net/docker/plexinc/pms-docker
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "8000m"
+          limits:
+            memory: "16Gi"
+            cpu: "8000m"
+        ports:
+          - containerPort: 32400
+            name: "plex-port"
+        env:
+        - name: TZ
+          value: "America/New_York"
+        - name: PLEX_CLAIM
+          valueFrom:
+            secretKeyRef:
+              name: plex-claim-token
+              key: token
+        - name: ALLOWED_NETWORKS
+          value: 10.0.0.0/8,100.64.0.0/10,172.16.0.0/12,192.168.0.0/16
+        volumeMounts:
+          - mountPath: "/data"
+            name: plex-data-volume
+          - mountPath: "/config"
+            name: plex-config-volume
+      volumes:
+      - name: plex-data-volume
+        persistentVolumeClaim:
+          claimName: media-plex-data-claim
+      - name: plex-config-volume
+        persistentVolumeClaim:
+          claimName: media-plex-config-claim
+      securityContext:
+        fsGroup: 1000
