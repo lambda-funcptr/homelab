@@ -1,6 +1,6 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: infrastructure
+  name: infra
   labels:
-    name: infrastructure
+    name: infra
