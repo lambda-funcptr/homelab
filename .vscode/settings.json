@@ -1,2 +1,5 @@
 {
+    "terminal.integrated.env.linux": {
+        "PATH": "${env:PATH}:${workspaceFolder}/bin:${workspaceFolder}/bin/opt"
+    }
 }
