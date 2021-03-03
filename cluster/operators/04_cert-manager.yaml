@@ -15,5 +15,5 @@
 
     - name: Patch cert-manager for split-horizon DNS
       shell: |
-        kubectl -n cert-manager patch deployment cert-manager --patch-file /tmp/operator-manifests/cert-manager-controller-patch.yaml >> ~/.kube/cert-manager.txt;
+        kubectl -n cert-manager patch deployment cert-manager --patch-file /tmp/manifests/cert-manager-controller-patch.yaml >> ~/.kube/cert-manager.txt;
       when: not cert_manager_status.stat.exists

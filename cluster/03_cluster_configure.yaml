@@ -4,7 +4,7 @@
     - name: Copy over custom manifests
       copy:
         src: operators/manifests
-        dest: /tmp/operator-manifests
+        dest: /tmp
 
 - import_playbook: operators/00_cni.yaml
 - import_playbook: operators/01_dashboard.yaml
@@ -17,7 +17,7 @@
   tasks:
     - name: Delete custom manifests
       file:
-        path: /tmp/operator-manifests
+        path: /tmp
         state: absent
 
     - name: Remove master taint # Purely temporary until I get more masters.
@@ -26,4 +26,3 @@
     - name: Reboot... k8s-n2 has some especially long boot times
       reboot:
         reboot_timeout: 6000
-      when: not kube_router.stat.exists

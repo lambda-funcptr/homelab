@@ -110,7 +110,7 @@
     - name: Restart CRI-O
       service:
         name: crio
-        state: restarted
+        state: reloaded
       when: crio_config.changed
 
     - name: Installing Kubelet.
