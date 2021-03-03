@@ -1,0 +1,10 @@
+#!/bin/sh
+
+WORKDIR="$(dirname $0)/.."
+
+screen -X -S cdi-upload-${UID} quit 
+screen -S cdi-upload-${UID} -d -m kubectl port-forward -n cdi service/cdi-uploadproxy 8443:8443
+
+$WORKDIR/bin/opt/virtctl image-upload -n "$1" dv "$2" --image-path="$3" --no-create --insecure --uploadproxy-url=https://localhost:8443
+
+screen -X -S cdi-upload-${UID} quit 

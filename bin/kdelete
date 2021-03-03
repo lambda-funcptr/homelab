@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z "$1" ]]; then
+    echo "No target provided to delete!"
+    exit -1;
+fi
+
+echo "The following changes will be applied:"
+{ kubectl delete -Rf "$1" --dry-run=server | grep -v "unchanged"; } || { echo "Not all files could be validated, exiting."; exit -1; }
+
+read -p "Commit changes? [Y/n] " -n 1 -r CONFIRM;
+echo
+case $CONFIRM in
+    [Yy]* ) echo "Committing changes..."; kubectl delete -Rf "$1"; exit 0;;
+    * ) echo "Changes not committed."; exit 0;;
+esac
