@@ -7,5 +7,6 @@ allowVolumeExpansion: true
 volumeBindingMode: WaitForFirstConsumer
 parameters:
   cstorPoolCluster: cspc-hdd
-  replicaCount: "2"
+  replicaCount: "1"
   cas-type: cstor
+  fsType: xfs

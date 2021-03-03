@@ -6,6 +6,7 @@ provisioner: cstor.csi.openebs.io
 allowVolumeExpansion: true
 volumeBindingMode: WaitForFirstConsumer
 parameters:
-  cstorPoolCluster: ssd-cspc
+  cstorPoolCluster: cspc-ssd
   replicaCount: "2"
   cas-type: cstor
+  fsType: xfs

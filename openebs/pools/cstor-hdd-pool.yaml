@@ -1,7 +1,7 @@
 apiVersion: cstor.openebs.io/v1
 kind: CStorPoolCluster
 metadata:
-  name: cspc-ssd
+  name: cspc-hdd
   namespace: openebs
 spec:
   resources:
