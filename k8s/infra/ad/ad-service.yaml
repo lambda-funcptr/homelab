@@ -4,7 +4,7 @@ metadata:
   labels:
     app: active-directory
   name: ad
-  namespace: infrastructure
+  namespace: infra
 spec:
   ports:
   - name: ldap

@@ -2,7 +2,7 @@ apiVersion: cdi.kubevirt.io/v1beta1
 kind: DataVolume
 metadata:
   name: ad-disk-dv
-  namespace: infrastructure
+  namespace: infra
   labels:
     app: active-directory
     backup: "true"
@@ -22,7 +22,7 @@ apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachine
 metadata:
   name: ad-vm
-  namespace: infrastructure
+  namespace: infra
   labels:
     app: active-directory
 spec:
@@ -31,7 +31,7 @@ spec:
     metadata:
       labels:
         name: ad-vm
-        namespace: infrastructure
+        namespace: infra
         app: active-directory
     spec:
       domain:

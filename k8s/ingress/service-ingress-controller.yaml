@@ -18,7 +18,7 @@ spec:
       serviceAccountName: ingress-service-account
       containers:
       - name: traefik-ingress
-        image: harbor.fnptr.net/docker/library/traefik
+        image: traefik
         imagePullPolicy: Always
         args:
           - --providers.kubernetesingress=true
@@ -33,8 +33,6 @@ spec:
           - --entryPoints.ping.address=:8082
           - --ping.entryPoint=ping
         securityContext:
-          runAsUser:  1000
-          runAsGroup: 1000
           capabilities:
             drop:
               - ALL

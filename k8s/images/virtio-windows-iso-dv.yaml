@@ -1,14 +1,12 @@
 apiVersion: cdi.kubevirt.io/v1beta1
 kind: DataVolume
 metadata:
-  name: ubuntu-20-04-server-dv
+  name: virtio-windows-iso
   namespace: images
-  labels:
-    app: ubuntu
 spec:
   source:
     http:
-      url: https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64-disk-kvm.img
+      url: https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
   pvc:
     volumeMode: Block
     accessModes:

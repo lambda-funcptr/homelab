@@ -2,7 +2,7 @@ apiVersion: cdi.kubevirt.io/v1beta1
 kind: DataVolume
 metadata:
   name: omada-controller-dv
-  namespace: infrastructure
+  namespace: infra
   labels:
     app: omada-controller
     backup: "true"
@@ -23,7 +23,7 @@ spec:
 #kind: DataVolume
 #metadata:
 #  name: omada-controller-install-iso-dv
-#  namespace: infrastructure
+#  namespace: infra
 #  labels:
 #    app: omada-controller
 #spec:
@@ -44,7 +44,7 @@ apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachine
 metadata:
   name: omada-controller
-  namespace: infrastructure
+  namespace: infra
   labels:
     app: active-directory
 spec:
@@ -53,7 +53,6 @@ spec:
     metadata:
       labels:
         name: omada-controller
-        namespace: infrastructure
         app: omada-controller
     spec:
       domain:

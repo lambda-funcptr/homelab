@@ -2,17 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: statping-ingress
-  namespace: infrastructure
+  namespace: stats
   annotations:
     traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   ingressClassName: infrastructure-ingress
   tls:
   - hosts:
-      - monitor.fnptr.net
-    secretName: monitor-cert
+      - stats.fnptr.net
+    secretName: stats-cert
   rules:
-  - host: monitor.fnptr.net
+  - host: stats.fnptr.net
     http:
       paths:
       - path: /ping

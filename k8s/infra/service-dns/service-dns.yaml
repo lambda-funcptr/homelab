@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: service-dns
-  namespace: infrastructure
+  namespace: infra
   labels:
     app: service-dns
 spec:
@@ -32,25 +32,3 @@ spec:
         - name: service-dns-config-volume
           configMap:
             name: service-dns-config
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    metallb.universe.tf/address-pool: servers
-  labels:
-    app: service-dns
-  name: service-dns
-  namespace: infrastructure
-spec:
-  externalTrafficPolicy: Cluster
-  ports:
-  - name: dns
-    port: 53
-    protocol: UDP
-    targetPort: 53
-  selector:
-    app: service-dns
-  sessionAffinity: None
-  type: LoadBalancer
-  loadBalancerIP: 10.64.0.1
