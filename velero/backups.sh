@@ -2,5 +2,4 @@
 
 cd $(dirname $0)/../
 
-bin/opt/velero backup create active-directory -l app=active-directory --snapshot-volumes --volume-snapshot-locations=minio
-bin/opt/velero backup create grafana -l app=grafana --snapshot-volumes --volume-snapshot-locations=minio
+bin/opt/velero schedule create k8s-backup --schedule="@every 168h" --ttl 2160h0m0s -l backup=true --snapshot-volumes --volume-snapshot-locations=backblaze-b2
