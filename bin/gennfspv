@@ -5,7 +5,7 @@ if [ -z $1 ]; then
     exit 0;
 fi
 
-cd $(dirname $0)/../kubernetes
+cd $(dirname $0)/../k8s
 
 NAME=$1
 SIZE="8Gi"

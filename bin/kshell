@@ -6,4 +6,4 @@ if [ -z "$1" ]; then
     NAMESPACE="default"
 fi
 
-kubectl run -n $NAMESPACE shell --rm -i --tty --image alpine -- ash
+kubectl run -n $NAMESPACE shell --privileged --rm -i --tty --image alpine -- ash
