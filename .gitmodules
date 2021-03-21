@@ -4,3 +4,6 @@
 [submodule "unitbot"]
 	path = unitbot
 	url = git@github.com:lambda-funcptr/unitbot.git
+[submodule "images/docker/matrix/matrix-appservice-discord"]
+	path = images/docker/matrix/matrix-appservice-discord
+	url = https://github.com/Half-Shot/matrix-appservice-discord.git

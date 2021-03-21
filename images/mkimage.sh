@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+set -e 
 
 PUSH=false
 
@@ -34,7 +36,10 @@ build_image() {
 
 for DOCKERFILE in $(find docker -name "Dockerfile" -type f); do
     IMAGE_TAG="$(dirname $DOCKERFILE | cut -d'/' -f2-)"
-    IMAGE_DEPENDS=$(cat docker/$IMAGE_TAG/depends)
+    IMAGE_DEPENDS="";
+    if [[ -e docker/$IMAGE_TAG/depends ]]; then
+        IMAGE_DEPENDS=$(cat docker/$IMAGE_TAG/depends)
+    fi
     for DEPENDENCY in $IMAGE_DEPENDS; do
         build_image $DEPENDENCY
     done
