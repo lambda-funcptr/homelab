@@ -4,7 +4,7 @@ metadata:
   name: matrixdb-pvc
   namespace: matrix
   labels:
-    app: synapse
+    app: matrixdb
     backup: "true"
 spec:
   storageClassName: openebs-sc-ssd

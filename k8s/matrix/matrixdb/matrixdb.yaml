@@ -26,7 +26,12 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: dbvol
+            - mountPath: /docker-entrypoint-initdb.d
+              name: initscripts
       volumes:
         - name: dbvol
           persistentVolumeClaim:
             claimName: matrixdb-pvc
+        - name: initscripts
+          configMap:
+            name: matrixdb-init

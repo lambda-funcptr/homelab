@@ -1,0 +1,22 @@
+# This file is purely for tracking changes to the database and recreating with a fresh database if bad things occur.
+# Real administration of the database will occur via shell commands. (This is bad, but what else am I supposed to do, run a DB server?)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: matrixdb-init
+  namespace: matrix
+  labels:
+    app: matrixdb
+data:
+  init-db.sh: |
+    #!/bin/bash
+    set -e
+
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+      CREATE DATABASE matrixdb
+        ENCODING 'UTF8'
+        LC_COLLATE='C'
+        LC_CTYPE='C'
+        template=template0
+        OWNER matrixdb_user;
+    EOSQL
