@@ -6,7 +6,7 @@ metadata:
 spec:
   source:
     http:
-      url: https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
+      url: https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.185-2/virtio-win-0.1.185.iso
   pvc:
     volumeMode: Block
     accessModes:
