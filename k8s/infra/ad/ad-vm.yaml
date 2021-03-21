@@ -47,14 +47,10 @@ spec:
             name: ad-disk0
           interfaces:
             - bridge: {}
-              name: default
-            - bridge: {}
               name: labnet-network
         machine:
           type: ""
       networks:
-        - name: default
-          pod: {}
         - name: labnet-network
           multus:
             networkName: network/labnet
