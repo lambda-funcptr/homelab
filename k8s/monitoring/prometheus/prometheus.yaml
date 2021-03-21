@@ -15,7 +15,7 @@ spec:
       labels:
         app: prometheus
     spec:
-      serviceAccountName: prometheus
+      serviceAccountName: monitor
       containers:
         - name: prometheus
           image: prom/prometheus:latest
