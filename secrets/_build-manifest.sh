@@ -11,4 +11,4 @@ for NAMESPACE_DIR in k8s/generic/*; do
     done
 done
 
-ls -R $(dirname $0) > $(dirname $0)/_MANIFEST
+ls -R > _MANIFEST

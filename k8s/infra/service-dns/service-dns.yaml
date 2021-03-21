@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: coredns
-        image: harbor.fnptr.net/docker/coredns/coredns
+        image: coredns/coredns
         ports:
           - containerPort: 53
             name: "dns"
