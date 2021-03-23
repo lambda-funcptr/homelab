@@ -26,5 +26,4 @@ fi
 
 ln -s /dev/stdout /srv/papermc/log
 
-tmux new -s console -d "/usr/lib/jvm/java-11-openjdk/bin/java $MC_OPTS -jar server.jar nogui > /srv/papermc/log"
-tmux wait-for console
+/usr/lib/jvm/java-11-openjdk/bin/java $MC_OPTS -jar server.jar nogui > /srv/papermc/log
