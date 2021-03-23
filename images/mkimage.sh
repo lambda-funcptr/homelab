@@ -31,7 +31,6 @@ build_image() {
         echo "Pushing image $@ to harbor..."
         docker push harbor.fnptr.net/$@
     fi
-    cd ..
 }
 
 for DOCKERFILE in $(find docker -name "Dockerfile" -type f); do
