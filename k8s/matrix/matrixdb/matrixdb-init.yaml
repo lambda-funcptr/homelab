@@ -19,4 +19,13 @@ data:
         LC_CTYPE='C'
         template=template0
         OWNER matrixdb_user;
+
+      CREATE USER discordbridge WITH PASSWORD '$DB_USERPASS_DISCORDBRIDGE';
+
+      CREATE DATABASE discorddb
+        ENCODING 'UTF8'
+        LC_COLLATE='C'
+        LC_CTYPE='C'
+        template=template0
+        OWNER discordbridge;
     EOSQL
