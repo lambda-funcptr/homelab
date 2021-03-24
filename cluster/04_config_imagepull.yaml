@@ -1,0 +1,17 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Copy over the cert registration script
+      copy:
+        src: config/opt/bin
+        dest: /opt
+
+    - name: Add a pull cert pull script every hour or so
+      cron:
+        name: Pull certs from harbor
+        minute: "0"
+        hour: "*"
+        job: "sh /opt/bin/register-certs.sh"
+
+    - name: Do it anyways
+      shell: "sh /opt/bin/register-certs.sh"
