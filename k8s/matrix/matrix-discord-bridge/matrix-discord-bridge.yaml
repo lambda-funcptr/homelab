@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matrix-discord-bridge
+  namespace: matrix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: matrix-discord-bridge
+  template:
+    metadata:
+      labels:
+        app: matrix-discord-bridge
+    spec:
+      containers:
+        - name: matrix-discord-bridge
+          image: harbor.fnptr.net/matrix/matrix-appservice-discord:latest
+          ports:
+            - containerPort: 9005
+          volumeMounts:
+            - mountPath: /data
+              name: config
+      securityContext:
+        fsGroup: 1000
+      volumes:
+        - name: config
+          secret:
+            secretName: matrix-discord-config
