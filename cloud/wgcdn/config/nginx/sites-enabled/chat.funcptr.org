@@ -14,4 +14,10 @@ server {
         proxy_set_header Host   $host;
         proxy_set_header X-Forwarded-For $remote_addr;
     }
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+    add_header Referrer-Policy "strict-origin";
+    add_header Permissions-Policy "geolocation=(),midi=(),sync-xhr=(),microphone=(self),camera=(self),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()";
 }
