@@ -82,7 +82,8 @@ Thanks to:
 - Homelab Discord for making me feel bad about my lab choices regardless of what I do
 - Lucratiel from the Homelab Discord for inspiring me to ~~waste my life on~~ use Kubernetes 
 - Watcher7 from the Homelab Discord for telling me about MetalLB
-- kroy from the Homelab Discord for being an all around cool dude.
-- Liam Silvers for pointing out that I can't spell "secrets".
-- David S (Lem/This Is Temporary) for trying his best to dissuade me from doing this.
+- kroy from the Homelab Discord for being an all around cool dude
+- Liam Silvers for pointing out that I can't spell "secrets"
+- David S (Lem/This Is Temporary) for trying his best to dissuade me from doing this
 - BASH from the Homelab Discord for his advice with working with Kubernetes (Ingress, Infra, Management)
+- Seednode from the Homelab Discord for... Something. I still don't know what
