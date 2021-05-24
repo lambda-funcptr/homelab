@@ -1,0 +1,7 @@
+all:
+  hosts:
+    netvirt0:
+      ansible_host: 10.32.128.0
+  vars:
+    ansible_user: ubuntu
+    ansible_python_interpreter: /usr/bin/python3

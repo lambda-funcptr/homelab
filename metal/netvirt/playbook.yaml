@@ -1,0 +1,32 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Update hostname
+      shell: hostnamectl set-hostname {{inventory_hostname}}
+
+    - name: Update all packages
+      apt:
+        update_cache: yes
+        upgrade: safe
+      environment:
+        DEBIAN_FRONTEND: noninteractive
+    
+    - name: Configure unattended-upgrades
+      copy:
+        src: ../config/apt/apt.conf.d/20auto-upgrades
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+
+    - name: Check if GNS3 is already installed
+      stat:
+        path: ~/.gns3.log
+      register: gns3_installed
+
+    - name: Fetch GNS3 install script
+      get_url:
+        url: https://raw.githubusercontent.com/GNS3/gns3-server/master/scripts/remote-install.sh
+        dest: ./gns3-remote-install.sh
+        mode: "u=rwx,g=rwx,o=rx"
+
+    - name: Install GNS3
+      shell: ./gns3-remote-install.sh --with-iou --with-i386-repository > ~/.gns3.log
+      when: not gns3_installed.stat.exists
