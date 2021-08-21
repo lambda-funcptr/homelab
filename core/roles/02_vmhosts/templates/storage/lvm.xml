@@ -1,0 +1,6 @@
+<pool type="logical">
+  <name>{{ pool_name }}</name>
+  <target>
+    <path>/dev/vg0</path>
+  </target>
+</pool>

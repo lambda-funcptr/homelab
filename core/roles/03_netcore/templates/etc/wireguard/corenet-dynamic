@@ -1,0 +1,10 @@
+{% for peer in groups['corenet-dynamic'] %}
+
+# BEGIN {{ peer }}
+[Peer]
+PublicKey = {{ lookup('file', '../secrets/corenet/wireguard' + peer.pub) }}
+Endpoint = {{ lookup('file', '../secrets/nodes/' + peer) }}:51820
+AllowedIPs = {{ groups['all'][peer].host_vars[local_ip_range] }}/32
+# END {{peer}}
+
+{% endfor %}

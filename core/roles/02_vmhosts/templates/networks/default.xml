@@ -1,0 +1,10 @@
+<network ipv6="yes">
+  <name>default</name>
+  <bridge name="virtnet"/>
+  <forward mode='open'></forward>
+  <ip address="{{ net_v4 }}" netmask="255.255.0.0">
+    <dhcp>
+      <range start="{{ net_v4.split('.')[0] + "." + net_v4.split('.')[1] + '.0.1' }}" end="{{ net_v4.split('.')[0] + "." + net_v4.split('.')[1] + '.255.0' }}"/>
+    </dhcp>
+  </ip>
+</network>

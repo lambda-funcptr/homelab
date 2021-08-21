@@ -1,0 +1,9 @@
+all:
+  hosts:
+    eu-1.core.funptr.net:
+      iface_name: enp41s0
+      storage:
+        - lvm
+        - zfs
+      vmStore: zfs
+      imageStore: zfs

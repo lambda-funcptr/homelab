@@ -1,0 +1,18 @@
+- name: Checking for wireguard key existence...
+  stat:
+    path: /etc/wireguard/key
+  register: key
+
+- name: Generating wireguard key
+  shell: wg genkey | tee /etc/wireguard/key | wg pubkey > /etc/wireguard/{{inventory_hostname}}.pub
+  when: not key.stat.exists
+
+- name: Enforcing permissions on wireguard key
+  file:
+    path: /etc/wireguard/key
+    mode: u+rw,g-rwx,o-rwx
+
+- name: Fetching wireguard key from remote
+  fetch:
+    src: /etc/wireguard/{{inventory_hostname}}.pub
+    dest: ../secrets/corenet/wireguard/{{inventory_hostname}}.pub

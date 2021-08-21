@@ -1,0 +1,17 @@
+- name: Enable ZFS automount
+  service:
+    name: zfs-mount
+    enabled: yes
+    state: started
+
+- name: Enable ZFS target
+  service:
+    name: zfs.target
+    enabled: yes
+    state: started
+
+- name: Enable ZFS event daemon
+  service:
+    name: zfs-zed
+    enabled: yes
+    state: started

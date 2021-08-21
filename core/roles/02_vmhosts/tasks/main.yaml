@@ -1,0 +1,4 @@
+- include: 00_libvirtd.yaml
+- include: 01_virtnet.yaml
+- include: 02_storage.yaml
+- include: 03_image_storage.yaml

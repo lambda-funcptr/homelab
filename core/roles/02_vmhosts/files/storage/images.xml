@@ -1,0 +1,6 @@
+<pool type="dir">
+  <name>images</name>
+  <target>
+    <path>/mnt/images</path>
+  </target>
+</pool>

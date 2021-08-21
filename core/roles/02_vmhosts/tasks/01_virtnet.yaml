@@ -1,0 +1,35 @@
+- name: Create virtnet
+  virt_net:
+    command: define
+    name: default
+    xml: '{{ lookup("template", "networks/default.xml" )}}'
+    state: present
+    autostart: yes
+
+- name: Check if interface information exists...
+  stat: 
+    path: "/etc/network/interfaces.old"
+  register: interface_backup
+
+- name: Backup interface information...
+  command: "cp /etc/network/interfaces; /etc/network/interfaces.old"
+  when: not interface_backup.stat.exists
+
+- name: Delete inet6 definition
+  shell: "sed -n '/inet6 static/q;p' /etc/network/interfaces.old > /etc/network/interfaces"
+  when: not interface_backup.stat.exists
+
+- name: Reboot when inet6 definition changes
+  reboot: {}
+  when: not interface_backup.stat.exists
+
+- name: Apply nftables config
+  template:
+    src: "networks/nftables.conf"
+    dest: "/etc/nftables.conf"
+
+- name: Reload nftables
+  service:
+    name: nftables
+    state: restarted
+    enabled: yes

@@ -1,0 +1,28 @@
+- name: Update hostname
+  shell: hostnamectl set-hostname {{inventory_hostname}}
+
+- name: Copy sysctl.d swap config
+  copy:
+    src: etc/sysctl.d/swap.conf
+    dest: /etc/sysctl.d/swap.conf
+
+- name: Configure default release
+  copy:
+    src: etc/apt/apt.conf.d/10release
+    dest: /etc/apt/apt.conf.d/10release
+
+- name: Configure repos
+  copy:
+    src: etc/apt/sources.list
+    dest: /etc/apt/sources.list
+
+- name: Update all packages
+  apt:
+    update_cache: yes
+    upgrade: safe
+    default_release: stable
+
+- name: Configure unattended-upgrades
+  copy:
+    src: etc/apt/apt.conf.d/20auto-upgrades
+    dest: /etc/apt/apt.conf.d/20auto-upgrades

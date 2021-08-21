@@ -1,0 +1,13 @@
+- name: Check for default zpool existance
+  command: zpool list -Ho name zfs-data
+  ignore_errors: yes
+  changed_when: false
+  register: zpool_status
+
+- name: Create zfs-data zpool
+  command: zpool create zfs-data {{ zpool_vdevs | join(' ') }}
+  when: 
+    - zpool_status.rc == 1
+
+- name: Checking for zfs-data pool
+  command: zpool list -Ho name zfs-data

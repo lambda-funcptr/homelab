@@ -1,0 +1,19 @@
+- name: Install ZFS
+  apt:
+    name:
+      - dpkg-dev
+      - linux-headers-amd64
+      - zfs-dkms
+      - zfsutils-linux
+    state: present
+    default_release: stable
+  register: zfs_installed
+
+- name: Configure zfs modules to be loaded on boot
+  copy:
+    src: etc/modules-load.d/zfs.conf
+    dest: /etc/modules-load.d/zfs.conf
+
+- name: Reboot if ZFS was installed
+  reboot: {}
+  when: zfs_installed.changed

@@ -1,0 +1,15 @@
+- name: Install libvirt
+  apt:
+    name: 
+      - libvirt-daemon-system
+      - libvirt-daemon-driver-qemu
+      - libvirt-daemon-driver-storage-zfs
+      - python3-libvirt
+      - python3-lxml
+    state: present
+
+- name: Enable libvirtd
+  service:
+    name: libvirtd
+    enabled: yes
+    state: started

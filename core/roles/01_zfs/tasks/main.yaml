@@ -1,0 +1,3 @@
+- include: 00_zfs_packages.yaml
+- include: 01_zpool_creation.yaml
+- include: 02_zfs_services.yaml

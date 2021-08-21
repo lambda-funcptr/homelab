@@ -1,0 +1,12 @@
+all:
+  hosts:
+    eu-1.core.funptr.net:
+      roles:
+        - servers
+        - corenet
+        - zfs
+      ansible_user: root
+      ansible_host: 65.21.198.180
+      net_v4: 100.127.255.254
+  vars:
+    ansible_python_interpreter: /usr/bin/python3

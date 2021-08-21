@@ -1,0 +1,9 @@
+<pool type="zfs">
+  <name>{{ pool_name }}</name>
+  <source>
+    <name>zfs-data</name>
+  </source>
+  <target>
+    <path>/dev/zvol/zfs-data</path>
+  </target>
+</pool>

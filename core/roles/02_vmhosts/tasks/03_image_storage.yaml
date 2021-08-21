@@ -1,0 +1,22 @@
+- name: Create /mnt/images
+  file:
+    path: /mnt/images
+    state: directory
+    mode: 744
+
+- name: ZFS dataset for images
+  zfs:
+    name: zfs-data/images
+    state: present
+    extra_zfs_properties:
+      compression: gzip
+      mountpoint: /mnt/images
+  when: "imageStore == 'zfs'"
+
+- name: Set up image storage location
+  virt_pool: 
+    command: define
+    name: images
+    state: present
+    xml: '{{ lookup("file", "files/storage/images.xml") }}'
+    autostart: true
