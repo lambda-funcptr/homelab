@@ -2,7 +2,7 @@
   file:
     path: /mnt/images
     state: directory
-    mode: 744
+    mode: 0744
 
 - name: ZFS dataset for images
   zfs:
@@ -20,3 +20,9 @@
     state: present
     xml: '{{ lookup("file", "files/storage/images.xml") }}'
     autostart: true
+
+- name: Download ISOs
+  get_url:
+    url: '{{ item["url"] }}'
+    dest: '/mnt/images/{{ item["name"] }}.iso'
+  with_items: '{{ images }}'

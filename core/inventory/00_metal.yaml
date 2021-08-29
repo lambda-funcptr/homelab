@@ -1,6 +1,6 @@
 all:
   hosts:
-    eu-1.core.funptr.net:
+    eu-1.core.fnptr.net:
       roles:
         - servers
         - corenet

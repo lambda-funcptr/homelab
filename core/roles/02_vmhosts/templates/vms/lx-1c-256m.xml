@@ -12,7 +12,15 @@
     <type arch="x86_64" machine="pc-q35-5.2">hvm</type>
     <loader readonly="yes" type="pflash">/usr/share/OVMF/OVMF_CODE_4M.fd</loader>
     <nvram>/var/lib/libvirt/qemu/nvram/{{vm_name}}_VARS.fd</nvram>
+    <smbios mode='sysinfo'/>
   </os>
+  <sysinfo type='smbios'>
+    <system>
+      <entry name='manufacturer'>fnptr.net</entry>
+      <entry name='product'>ubuntu</entry>
+      <entry name='serial'>{{vm_name}}</entry>
+    </system>
+  </sysinfo>
   <features>
     <acpi/>
     <apic/>

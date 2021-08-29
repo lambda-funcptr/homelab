@@ -27,9 +27,17 @@
   template:
     src: "networks/nftables.conf"
     dest: "/etc/nftables.conf"
+  register: nftable_config
 
 - name: Reload nftables
   service:
     name: nftables
     state: restarted
     enabled: yes
+  when: nftable_config.changed
+
+- name: Add self as metal.local.fnptr.net
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{net_v4}}$'
+    line: "{{ net_v4 }} metal.local.fnptr.net metal"

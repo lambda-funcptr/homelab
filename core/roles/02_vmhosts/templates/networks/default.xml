@@ -1,4 +1,4 @@
-<network ipv6="yes">
+<network ipv6="yes" xmlns:dnsmasq='http://libvirt.org/schemas/network/dnsmasq/1.0'>
   <name>default</name>
   <bridge name="virtnet"/>
   <forward mode='open'></forward>
@@ -7,4 +7,8 @@
       <range start="{{ net_v4.split('.')[0] + "." + net_v4.split('.')[1] + '.0.1' }}" end="{{ net_v4.split('.')[0] + "." + net_v4.split('.')[1] + '.255.0' }}"/>
     </dhcp>
   </ip>
+
+  <dnsmasq:options>
+    <dnsmasq:option value="dhcp-boot=http://metal.local.fnptr.net:8000/boot.ipxe"/>
+  </dnsmasq:options>
 </network>

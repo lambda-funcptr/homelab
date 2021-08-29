@@ -2,3 +2,4 @@
 - include: 01_virtnet.yaml
 - include: 02_storage.yaml
 - include: 03_image_storage.yaml
+- include: 04_provisioning.yaml

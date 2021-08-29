@@ -1,0 +1,39 @@
+- name: Install ipxehttpd service
+  template:
+    src: templates/etc/systemd/system/ipxehttpd.service
+    dest: /etc/systemd/system/ipxehttpd.service
+
+- name: Create /mnt/images
+  file:
+    path: /srv/ipxe
+    state: directory
+    mode: 0744
+
+- name: Copy all ipxe related files
+  copy:
+    src: files/srv/ipxe/
+    dest: /srv/ipxe/.
+    mode: 0744
+
+- name: Extract ubuntu kernel and initramfs
+  iso_extract:
+    image: /mnt/images/ubuntu-server-20.04.iso
+    files:
+      - casper/initrd
+      - casper/vmlinuz
+    dest: /srv/ipxe/ubuntu-server-20.04
+
+- name: Set permissions on the ipxe http webroot
+  file:
+    path: /srv/ipxe
+    owner: nobody
+    group: nogroup
+    mode: 0700
+    state: directory
+    recurse: yes
+
+- name: Start ipxehttpd service
+  service:
+    name: ipxehttpd
+    state: started
+    enabled: yes

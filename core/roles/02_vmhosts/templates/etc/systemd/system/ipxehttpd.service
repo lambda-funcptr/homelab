@@ -1,0 +1,4 @@
+[Service]
+ExecStart=busybox httpd -p {{ net_v4 }}:8000 -u nobody:nogroup -h /srv/ipxe -f 
+Restart=always
+RestartSec=30

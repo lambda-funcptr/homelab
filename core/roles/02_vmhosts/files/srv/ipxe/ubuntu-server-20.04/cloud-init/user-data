@@ -1,0 +1,19 @@
+#cloud-config
+autoinstall:
+  version: 1
+  keyboard: {layout: us, toggle: null, variant: ''}
+  locale: en_US.UTF-8
+  ssh:
+    allow-pw: false
+    authorized-keys: [ "ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzODQAAABhBHuV4ic9QM9B04T8oc/Fi5bS4py18cwWXtcaIXVV27IofmHwGygKMTLX9hokPSVn4AeUuVi6j6pF5rZrkASJTz2VSijrssUeXsc+dbP/7zvPzvwLWk/XZ+eNihvtwX7pRA==" ]
+    install-server: true
+  storage:
+    layout:
+      name: direct
+  updates: security
+
+  user-data:
+    users:
+      - name: root
+        ssh-authorized-keys: 
+          - ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzODQAAABhBHuV4ic9QM9B04T8oc/Fi5bS4py18cwWXtcaIXVV27IofmHwGygKMTLX9hokPSVn4AeUuVi6j6pF5rZrkASJTz2VSijrssUeXsc+dbP/7zvPzvwLWk/XZ+eNihvtwX7pRA==
