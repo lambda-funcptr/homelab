@@ -1,6 +1,1 @@
 #cloud-config
-version: 1
-identity:
-storage:
-  layout:
-    name: direct

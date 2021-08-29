@@ -1,6 +1,6 @@
 #!ipxe
 
-kernel http://metal.local.fnptr.net:8000/${product}/vmlinuz initrd=initrd console=ttyS0 quiet only-ubiquity file=/cdrom/preseed/cli.seed text ds=nocloud-net;s=http://metal.local.fnptr.net:8000/${product}/cloud-init/ autoinstall
+kernel http://metal.local.fnptr.net:8000/${product}/vmlinuz initrd=initrd console=ttyS0 quiet only-ubiquity file=/cdrom/preseed/cli.seed text ds=nocloud-net;s=http://metal.local.fnptr.net:8000/${product}/cloud-init/ systemd.hostname=${serial} autoinstall
 initrd http://metal.local.fnptr.net:8000/${product}/initrd
 
 boot
