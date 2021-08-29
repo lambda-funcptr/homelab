@@ -1,0 +1,5 @@
+- hosts: all:!vms
+  become: yes
+  tasks:
+    - include_role:
+        name: 01_zfs

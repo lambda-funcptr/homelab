@@ -1,0 +1,4 @@
+- include: 00_metal.yaml
+- include: 01_zfs.yaml
+- include: 02_vmhosts.yaml
+- include: 03_netcore.yaml
