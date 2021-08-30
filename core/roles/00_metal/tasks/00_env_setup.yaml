@@ -6,6 +6,10 @@
     src: etc/sysctl.d/swap.conf
     dest: /etc/sysctl.d/swap.conf
 
+- name: Update all package listings
+  apt:
+    update_cache: yes
+
 - name: Configure default release
   copy:
     src: etc/apt/apt.conf.d/10release

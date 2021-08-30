@@ -2,9 +2,11 @@ all:
   hosts:
     eu-1.core.fnptr.net:
       roles:
-        - servers
-        - corenet
-        - zfs
+        - 00_metal
+        - 01_zfs
+        - 02_vmhosts
+        - 03_provision_vms
+        - 04_corenet
       ansible_user: root
       ansible_host: 65.21.198.180
       net_v4: 100.127.255.254

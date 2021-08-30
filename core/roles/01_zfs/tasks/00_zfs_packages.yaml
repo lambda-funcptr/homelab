@@ -4,6 +4,7 @@
       - dpkg-dev
       - linux-headers-amd64
       - zfs-dkms
+      - zfs-zed
       - zfsutils-linux
     state: present
     default_release: stable

@@ -12,7 +12,7 @@
   register: interface_backup
 
 - name: Backup interface information...
-  command: "cp /etc/network/interfaces; /etc/network/interfaces.old"
+  command: "cp /etc/network/interfaces /etc/network/interfaces.old"
   when: not interface_backup.stat.exists
 
 - name: Delete inet6 definition
