@@ -1,0 +1,12 @@
+all:
+  hosts:
+    jellyfin.eu-1.core.fnptr.net:
+      vm:
+        host: eu-1.core.fnptr.net
+        name: jellyfin
+        type: linux
+        cpu: 2
+        memory: 2048
+        storage: 256G
+        install_image: ubuntu-server-20.04
+      ansible_user: ubuntu

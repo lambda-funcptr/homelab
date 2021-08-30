@@ -1,0 +1,5 @@
+all:
+  children:
+    vms:
+      hosts:
+        jellyfin.eu-1.core.fnptr.net:

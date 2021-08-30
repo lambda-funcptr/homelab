@@ -1,0 +1,9 @@
+
+- hosts: vms
+  become: yes
+  gather_facts: false
+  tasks:
+    - include_role:
+        name: 03_provision_vms
+        tasks_from: "99_provision_vm.yaml"
+      with_items: groups['vm']
