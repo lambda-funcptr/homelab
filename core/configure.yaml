@@ -1,5 +1,5 @@
-- include: 00_metal.yaml
-- include: 01_zfs.yaml
-- include: 02_vmhosts.yaml
-- include: 03_provision_vms.yaml
-- include: 04_netcore.yaml
+- import_playbook: 00_metal.yaml
+- import_playbook: 01_zfs.yaml
+- import_playbook: 02_vmhosts.yaml
+- import_playbook: 03_provision_vms.yaml
+- import_playbook: 04_netcore.yaml

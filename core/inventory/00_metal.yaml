@@ -9,6 +9,7 @@ all:
         - 04_corenet
       ansible_user: root
       ansible_host: 65.21.198.180
-      net_v4: 100.127.255.254
+      site_id: 69
+      net_v4: 100.69.255.254
   vars:
     ansible_python_interpreter: /usr/bin/python3

@@ -4,6 +4,8 @@
       - libvirt-daemon-system
       - libvirt-daemon-driver-qemu
       - libvirt-daemon-driver-storage-zfs
+      - qemu-kvm
+      - ovmf
       - python3-libvirt
       - python3-lxml
     state: present
