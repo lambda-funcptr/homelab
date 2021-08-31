@@ -1,5 +1,0 @@
-all:
-  hosts:
-    eu-1.core.fnptr.net:
-      zpool_vdevs:
-        - mirror ata-SAMSUNG_MZ7LN1T0HAJQ-00000_S3TXNX0NB00089 ata-SAMSUNG_MZ7LN1T0HAJQ-00000_S3TXNX0NB00306

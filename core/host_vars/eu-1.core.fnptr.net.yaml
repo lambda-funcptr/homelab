@@ -1,0 +1,17 @@
+# Bare metal variables
+ansible_user: root
+ansible_host: 65.21.198.180
+site_id: 69
+# corenet/wg related ip address
+net_v4: 100.69.255.254
+iface_name: enp41s0
+# ZFS
+zpool_vdevs:
+  - mirror ata-SAMSUNG_MZ7LN1T0HAJQ-00000_S3TXNX0NB00089 ata-SAMSUNG_MZ7LN1T0HAJQ-00000_S3TXNX0NB00306
+# libvirt variables
+vg_name: vg0
+storage:
+  - lvm
+  - zfs
+vm_store: zfs
+image_store: zfs

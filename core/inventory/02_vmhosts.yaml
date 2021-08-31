@@ -1,9 +1,0 @@
-all:
-  hosts:
-    eu-1.core.fnptr.net:
-      iface_name: enp41s0
-      storage:
-        - lvm
-        - zfs
-      vmStore: zfs
-      imageStore: zfs

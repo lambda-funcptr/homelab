@@ -1,0 +1,15 @@
+vm:
+  host: eu-1.core.fnptr.net
+  type: linux
+  cpu: 2
+  memory: 4096
+  disks:
+    - name: vda
+      storage: default
+      size: 16G
+      boot: yes
+    - name: vdb
+      storage: lvm
+      size: 64G
+  install_image: ubuntu-server-20.04
+ansible_user: ubuntu
