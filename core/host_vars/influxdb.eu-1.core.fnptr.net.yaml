@@ -7,7 +7,6 @@ vm:
     - name: vda
       storage: default
       size: 16G
-      boot: yes
     - name: vdb
       storage: lvm
       size: 64G

@@ -1,6 +1,6 @@
 <domain type="kvm">
-  <name>{{vm["name"]}}</name>
-  <title>{{vm["name"]}}</title>
+  <name>{{ inventory_hostname_short }}</name>
+  <title>{{ inventory_hostname_short }}</title>
   <metadata>
     <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
     </libosinfo:libosinfo>
@@ -8,17 +8,21 @@
   <memory unit="MiB">{{ vm["memory"] }}</memory>
   <currentMemory unit="MiB">{{ vm["memory"] }}</currentMemory>
   <vcpu placement="static">{{ vm["cpu"] }}</vcpu>
+  <memoryBacking>
+    <source type='memfd'/>
+    <access mode='shared'/>
+  </memoryBacking>
   <os>
     <type arch="x86_64" machine="pc-q35-5.2">hvm</type>
     <loader readonly="yes" type="pflash">/usr/share/OVMF/OVMF_CODE_4M.fd</loader>
-    <nvram>/var/lib/libvirt/qemu/nvram/{{vm["name"]}}_VARS.fd</nvram>
+    <nvram>/var/lib/libvirt/qemu/nvram/{{ inventory_hostname_short }}_VARS.fd</nvram>
     <smbios mode='sysinfo'/>
   </os>
   <sysinfo type='smbios'>
     <system>
       <entry name='manufacturer'>fnptr.net</entry>
       <entry name='product'>{{vm["install_image"]}}</entry>
-      <entry name='serial'>{{vm["name"]}}</entry>
+      <entry name='serial'>{{ inventory_hostname_short }}</entry>
     </system>
   </sysinfo>
   <features>
@@ -41,12 +45,44 @@
   </pm>
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    {% for disk in vm["disks"] %}
+    {% if (disk["storage"] == "zfs") or (disk["storage"] == "default" and hostvars[vm["host"]]["vm_store"] == "zfs") %}
     <disk type="block" device="disk">
-      <driver name="qemu" type="raw" cache="none" io="native"/>
-      <target dev="vda" bus="virtio"/>
-      <source dev="/dev/zvol/zfs-data/vm-disk-{{vm["name"]}}" index="2"/>
+      <driver name="qemu" type="raw" cache="none" io="native" discard="unmap"/>
+      <target dev="{{ disk['name'] }}" bus="virtio"/>
+      <source dev="/dev/zvol/zfs-data/vm-{{ inventory_hostname_short }}-{{ disk['name'] }}"/>
+      {% if loop.first %}
       <boot order="1"/>
+      {% endif %}
     </disk>
+    {% endif %}
+
+    {% if (disk["storage"] == "lvm") or (disk["storage"] == "default" and hostvars[vm["host"]]["vm_store"] == "lvm") %}
+    <disk type="volume" device="disk">
+      <driver name="qemu" type="raw" cache="none" io="native" discard="unmap"/>
+      <target dev="{{ disk['name'] }}" bus="virtio"/>
+      {% if hostvars[vm["host"]]["vm_store"] == "lvm" %}
+      <source pool="default" volume="vm-{{ inventory_hostname_short }}-{{ disk['name'] }}"/>
+      {% else %}
+      <source pool="lvm" volume="vm-{{ inventory_hostname_short }}-{{ disk['name'] }}"/>
+      {% endif %}
+      {% if loop.first %}
+      <boot order="1"/>
+      {% endif %}
+    </disk>
+    {% endif %}
+    {% endfor %}
+
+    {% if vm["mounts"] is defined %}
+    {% for mount in vm["mounts"] %}
+    <filesystem type='mount' accessmode='passthrough'>
+      <driver type='virtiofs'/>
+      <source dir='/mnt/bulk/{{ mount["path"] }}'/>
+      <target dir='{{ mount["path"] }}'/>
+    </filesystem>
+    {% endfor %}
+    {% endif %}
+
     <disk type="file" device="cdrom">
       <driver name="qemu" type="raw"/>
       <source file="/mnt/images/{{vm["install_image"]}}.iso"/>

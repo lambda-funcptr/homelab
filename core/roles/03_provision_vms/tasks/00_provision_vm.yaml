@@ -1,0 +1,26 @@
+- include_tasks: 01_provision_disks.yaml
+  with_items: '{{ vm["disks"] }}'
+
+- name: Make sure the bulk mounts exists
+  delegate_to: '{{ vm["host"] }}'
+  file:
+    path: /mnt/bulk/{{ item["path"] }}
+    owner: nobody
+    group: nogroup
+    mode: 0777
+    state: directory
+  with_items: '{{ vm["mounts"] }}'
+  when: vm["mounts"] is defined
+
+- name: Create libvirt VM domain
+  delegate_to: '{{ vm["host"] }}'
+  virt:
+    command: define
+    autostart: yes
+    xml: '{{ lookup("template", "templates/vms/" + vm["type"] + ".xml") }}'
+
+- name: Start libvirt VM
+  delegate_to: '{{ vm["host"] }}'
+  virt:
+    name: '{{ inventory_hostname_short }}'
+    state: running

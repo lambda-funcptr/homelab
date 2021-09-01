@@ -1,9 +1,22 @@
+#  Only needed for first boot. Need to clean this up a little. 
+#- name: Delete default virtual network
+#  virt_net:
+#    command: undefine
+#    name: default
+#    state: absent
+
 - name: Create virtnet
   virt_net:
     command: define
     name: default
     xml: '{{ lookup("template", "networks/default.xml" )}}'
     state: present
+
+- name: Start virtnet
+  virt_net:
+    command: start
+    name: default
+    state: active
     autostart: yes
 
 - name: Check if interface information exists...

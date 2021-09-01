@@ -1,3 +1,9 @@
+- hosts: vmhosts
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: Gather facts from hypervisor
+      ansible.builtin.setup:
 
 - hosts: vms
   become: yes
@@ -5,5 +11,4 @@
   tasks:
     - include_role:
         name: 03_provision_vms
-        tasks_from: "99_provision_vm.yaml"
-      with_items: groups['vm']
+        tasks_from: "00_provision_vm.yaml"

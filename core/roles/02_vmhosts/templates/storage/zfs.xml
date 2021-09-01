@@ -1,5 +1,5 @@
 <pool type="zfs">
-  <name>{{ pool_name }}</name>
+  <name>zfs</name>
   <source>
     <name>zfs-data</name>
   </source>

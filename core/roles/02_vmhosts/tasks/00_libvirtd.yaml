@@ -4,6 +4,7 @@
       - libvirt-daemon-system
       - libvirt-daemon-driver-qemu
       - libvirt-daemon-driver-storage-zfs
+      - dnsmasq
       - qemu-kvm
       - ovmf
       - python3-libvirt

@@ -2,7 +2,7 @@
   file:
     path: /mnt/images
     state: directory
-    mode: 0744
+    mode: 0755
 
 - name: ZFS dataset for images
   zfs:
@@ -11,7 +11,7 @@
     extra_zfs_properties:
       compression: gzip
       mountpoint: /mnt/images
-  when: "imageStore == 'zfs'"
+  when: image_store == 'zfs'
 
 - name: Set up image storage location
   virt_pool: 
@@ -25,4 +25,5 @@
   get_url:
     url: '{{ item["url"] }}'
     dest: '/mnt/images/{{ item["name"] }}.iso'
+    mode: 0644
   with_items: '{{ images }}'

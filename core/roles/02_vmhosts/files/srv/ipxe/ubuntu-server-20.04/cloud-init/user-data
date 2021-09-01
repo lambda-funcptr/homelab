@@ -12,11 +12,14 @@ autoinstall:
   storage:
     layout:
       name: direct
+      match:
+        path: /dev/vda
   
   updates: security
 
   late-commands:
     - curtin in-target --target=/target -- hostnamectl set-hostname $(dmidecode -s system-serial-number)
+    - echo $(dmidecode -s system-serial-number) > /target/etc/hostname
 
   user-data:
     users:

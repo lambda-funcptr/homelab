@@ -1,6 +1,10 @@
 <pool type="logical">
-  <name>{{ pool_name }}</name>
+  <name>lvm</name>
+  <source>
+    <name>{{ vg_name }}</name>
+    <format type='lvm2'/>
+  </source>
   <target>
-    <path>/dev/vg0</path>
+    <path>/dev/{{ vg_name }}</path>
   </target>
 </pool>

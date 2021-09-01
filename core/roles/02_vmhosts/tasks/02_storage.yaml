@@ -1,13 +1,3 @@
-- name: Setting up default storage pool
-  virt_pool:
-    command: define
-    name: default
-    state: present
-    xml: '{{ lookup("template", "storage/" + vmStore + ".xml") }}'
-    autostart: true
-  vars:
-    pool_name: "default"
-
 - name: Setting up ZFS image storage pool
   virt_pool: 
     command: define
@@ -15,9 +5,6 @@
     state: present
     xml: '{{ lookup("template", "storage/zfs.xml") }}'
     autostart: true
-  vars:
-    pool_name: "zfs"
-  when: vmStore != "zfs"
 
 - name: Setting up LVM image storage pool
   virt_pool: 
@@ -25,6 +12,28 @@
     name: lvm
     state: present
     xml: '{{ lookup("template", "storage/lvm.xml") }}'
-  vars:
-    pool_name: "lvm"
-  when: vmStore != "lvm"
+    autostart: true
+
+- name: Setting up LVM image storage pool
+  virt_pool: 
+    command: start
+    name: lvm
+    state: active
+    autostart: true
+
+- name: Setting up /mnt/bulk
+  file:
+    path: /mnt/bulk
+    owner: nobody
+    group: nogroup
+    mode: 0777
+    state: directory
+
+- name: Creating bulk zfs dataset if zfs
+  zfs:
+    name: zfs-data/bulk
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/bulk
+  when: 
+    - bulk_store: zfs

@@ -1,0 +1,33 @@
+- block:
+  - name: Check if zvol exists
+    delegate_to: '{{ vm["host"] }}'
+    stat:
+      path: /dev/zvol/zfs-data/vm-{{ inventory_hostname_short }}-{{ item['name'] }}
+    register: zvol_disk
+
+  - name: Create ZFS storage sparse zvol
+    delegate_to: '{{ vm["host"] }}'
+    command: zfs create -s -V {{ item['size'] }} zfs-data/vm-{{ inventory_hostname_short }}-{{ item['name'] }}
+    when: not zvol_disk.stat.exists
+  when:
+    - item['storage'] == "zfs" or ( item['storage'] == "default" and hostvars[vm["host"]]["vm_store"] == "zfs" )
+
+- block:
+  - name: Check if LV exists
+    delegate_to: '{{ vm["host"] }}'
+    stat:
+      path: /dev/{{ hostvars[vm['host']]['vg_name'] }}/vm-{{ inventory_hostname_short }}-{{ item['name'] }}
+    register: lv_dev
+
+  - name: Provision fat logical volume
+    delegate_to: '{{ vm["host"] }}'
+    command: lvcreate -L {{ item['size'] }} {{ hostvars[vm['host']]['vg_name'] }} -n vm-{{ inventory_hostname_short }}-{{ item['name'] }}
+    when: not lv_dev.stat.exists
+    register: lv_created
+
+  - name: Reload LVM pool (non-default)
+    delegate_to: '{{ vm["host"] }}'
+    command: virsh pool-refresh lvm
+    when: lv_created.changed
+  when:
+    - item['storage'] == "lvm" or ( item['storage'] == "default" and hostvars[vm["host"]]["vm_store"] == "lvm" )

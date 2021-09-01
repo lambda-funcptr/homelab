@@ -7,6 +7,7 @@ vm:
     - name: vda
       storage: default
       size: 16G
-      boot: yes
+  mounts:
+    - path: media
   install_image: ubuntu-server-20.04
 ansible_user: ubuntu

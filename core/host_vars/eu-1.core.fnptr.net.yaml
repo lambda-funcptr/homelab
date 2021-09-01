@@ -15,3 +15,4 @@ storage:
   - zfs
 vm_store: zfs
 image_store: zfs
+bulk_store: zfs

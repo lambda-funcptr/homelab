@@ -8,6 +8,8 @@
     </dhcp>
   </ip>
 
+  <domain name='{{ inventory_hostname }}' localOnly='yes'/>
+
   <dnsmasq:options>
     <dnsmasq:option value="dhcp-boot=http://metal.local.fnptr.net:8000/boot.ipxe"/>
   </dnsmasq:options>

@@ -1,4 +1,4 @@
-- hosts: all:!vms
+- hosts: vmhosts
   become: yes
   tasks:
     - include_role:
