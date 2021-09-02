@@ -1,4 +1,4 @@
-ansible_user: root
+ansible_user: debian
 ansible_host: 193.70.89.22
   
 # edge vars

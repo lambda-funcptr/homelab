@@ -6,7 +6,7 @@
     src: etc/sysctl.d/swap.conf
     dest: /etc/sysctl.d/swap.conf
 
-- name: Update all package listings
+- name: Update all package listings (1/2)
   apt:
     update_cache: yes
 
@@ -19,6 +19,9 @@
   copy:
     src: etc/apt/sources.list
     dest: /etc/apt/sources.list
+
+- name: Update all package listings (2/2)
+  command: apt update
 
 - name: Update all packages
   apt:
