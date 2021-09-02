@@ -1,0 +1,7 @@
+- name: Install FRR
+  apt:
+    name:
+      - frr
+    state: present
+    default_release: stable
+  register: frr_installed

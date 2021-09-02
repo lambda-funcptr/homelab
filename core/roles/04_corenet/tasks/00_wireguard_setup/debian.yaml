@@ -1,0 +1,7 @@
+- name: Install wireguard...
+  apt:
+    name:
+      - wireguard
+    state: present
+    default_release: stable
+  register: wireguard_installed

@@ -1,3 +1,0 @@
-- include: 00_wireguard_setup.yaml
-- include: 01_genkeys.yaml
-- include: 02_copy_peers.yaml

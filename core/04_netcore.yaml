@@ -1,5 +1,6 @@
 - hosts: netcore
   become: yes
+  gather_facts: yes
   tasks:
     - include_role:
         name: 04_netcore

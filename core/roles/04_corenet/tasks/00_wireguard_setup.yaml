@@ -1,0 +1,2 @@
+- import_tasks: 00_wireguard_setup/debian.yaml
+  when: ansible_facts['os_family'] == 'Debian'
