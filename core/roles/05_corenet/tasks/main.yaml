@@ -1,0 +1,3 @@
+- import_tasks: 00_wireguard_config.yaml
+
+- import_tasks: 10_routing_daemon.yaml

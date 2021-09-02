@@ -1,0 +1,6 @@
+- hosts: edge
+  become: yes
+  gather_facts: yes
+  tasks:
+    - include_role:
+        name: 06_edge

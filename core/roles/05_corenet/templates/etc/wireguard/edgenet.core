@@ -1,0 +1,17 @@
+[Interface]
+PostUp = wg set %i private-key <(cat /etc/wireguard/key)
+ListenPort = 51820
+
+Address = 100.127.{{ site_id }}.254/24
+
+{% for edge_peer in groups['edge'] %}
+{% if edge_peer['core_peer'] == inventory_hostname %}
+# BEGIN {{ edge_peer }}
+[Peer]
+PublicKey = {{ lookup('file', '../secrets/corenet/wireguard/' + edge_peer) }}
+Endpoint = {{ item }}:51820
+AllowedIPs = 100.127.{{ site_id }}.{{ host_vars[item]['peer_id'] }}
+# END {{ edge_peer }}
+
+{% endif %}
+{% endfor %}

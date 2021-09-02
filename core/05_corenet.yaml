@@ -1,6 +1,6 @@
-- hosts: netcore
+- hosts: corenet
   become: yes
   gather_facts: yes
   tasks:
     - include_role:
-        name: 04_netcore
+        name: 05_corenet
