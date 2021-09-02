@@ -4,4 +4,4 @@
 - import_playbook: 03_provision_vms.yaml
 - import_playbook: 04_wireguard.yaml
 - import_playbook: 05_corenet.yaml
-- import_playbook: 06_edgenet.yaml
+- import_playbook: 06_edge.yaml
