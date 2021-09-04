@@ -1,0 +1,18 @@
+# Bare metal variables
+ansible_user: debian
+ansible_host: 144.217.66.235
+site_id: 67
+# corenet/wg related ip address
+net_v4: 100.67.255.254
+iface_name: eno1
+# ZFS
+zpool_vdevs:
+  - mirror ata-HGST_HUS726T4TALA6L1_V1HKJSZC ata-HGST_HUS726T4TALA6L1_V6H08GPS
+# libvirt variables
+vg_name: vg0
+storage:
+  - lvm
+  - zfs
+vm_store: lvm
+image_store: zfs
+bulk_store: zfs

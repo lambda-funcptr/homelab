@@ -1,4 +1,6 @@
 [metal]
-eu-1.core.fnptr.net
+ca-east-1.fnptr.net
+# ca-east-edge-1.ca-east-1.fnptr.net
 
-edge-1.eu-1.core.fnptr.net
+eu-1.fnptr.net
+eu-edge-1.fnptr.net
