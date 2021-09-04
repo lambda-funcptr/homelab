@@ -2,5 +2,5 @@ ansible_user: debian
 ansible_host: 193.70.89.22
   
 # edge vars
-core_peer: eu-1.core.fnptr.net
+core_peer: eu-1.fnptr.net
 peer_id: 1
