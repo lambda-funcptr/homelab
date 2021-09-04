@@ -9,5 +9,10 @@
   when: 
     - zpool_status.rc == 1
 
+- name: Set autotrim on pool
+  command: zpool set autotrim=on zfs-data
+  when:
+    - zpool_status.rc == 1
+
 - name: Checking for zfs-data pool
   command: zpool list -Ho name zfs-data
