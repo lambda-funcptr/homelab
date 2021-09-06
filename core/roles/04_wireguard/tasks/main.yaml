@@ -1,0 +1,2 @@
+- import_tasks: 00_wireguard_setup.yaml
+- import_tasks: 01_wireguard_keygen.yaml

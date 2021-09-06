@@ -1,17 +1,4 @@
-- name: Create wireguard config
-  template:
-    src: etc/wireguard/corenet
-    dest: /etc/wireguard/corenet.conf
-  register: wg_config
-
-- name: Enable wg-quick daemon
-  service:
-    name: wg-quick@corenet
-    state: started
-    enabled: yes
-
-- name: Restart wg-quick
-  service:
-    name: wg-quick@corenet
-    state: restarted
-  when: wg_config.changed
+- include_tasks: 00_wireguard_config/linux-systemd.yaml
+  with_items: '{{ groups["corenet"] }}'
+  when: 
+    - ansible_facts['os_family'] == 'Debian'

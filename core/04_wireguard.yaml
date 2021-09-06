@@ -1,4 +1,4 @@
-- hosts: corenet,edgenet
+- hosts: corenet, edgenet
   become: yes
   gather_facts: yes
   tasks:

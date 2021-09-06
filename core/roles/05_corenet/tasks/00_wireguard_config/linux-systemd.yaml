@@ -1,0 +1,19 @@
+- block:
+  - name: Create wireguard config
+    template:
+      src: etc/wireguard/corenet
+      dest: /etc/wireguard/{{ hostvars[item]['inventory_hostname_short'] }}.conf
+    register: wg_config
+
+  - name: Enable wg-quick daemon
+    service:
+      name: wg-quick@{{ hostvars[item]['inventory_hostname_short'] }}
+      state: started
+      enabled: yes
+
+  - name: Restart wg-quick
+    service:
+      name: wg-quick@{{ hostvars[item]['inventory_hostname_short'] }}
+      state: restarted
+    when: wg_config.changed
+  when: item != inventory_hostname

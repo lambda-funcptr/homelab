@@ -1,2 +1,0 @@
-- import_tasks: 01_wireguard_config/linux-systemd.yaml
-  when: ansible_facts['os_family'] == 'Debian'

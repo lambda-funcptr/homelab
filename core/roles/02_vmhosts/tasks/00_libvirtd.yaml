@@ -11,6 +11,29 @@
       - python3-lxml
     state: present
 
+- name: Remove AppArmor
+  apt:
+    name:
+      - apparmor
+    state: absent
+  register: apparmor_removed
+
+- name: Reboot after AppArmor uninstall
+  reboot:
+  when: apparmor_removed.changed
+
+- name: Configure qemu with superuser privileges
+  lineinfile:
+    path: /etc/libvirt/qemu.conf
+    line: user = "root"
+    state: present
+
+- name: Configure qemu with superuser group privileges
+  lineinfile:
+    path: /etc/libvirt/qemu.conf
+    line: group = "root"
+    state: present
+
 - name: Enable libvirtd
   service:
     name: libvirtd

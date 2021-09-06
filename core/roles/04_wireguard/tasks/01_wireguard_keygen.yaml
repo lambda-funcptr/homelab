@@ -1,0 +1,2 @@
+- import_tasks: 01_wireguard_keygen/linux-keygen.yaml
+  when: ansible_facts['os_family'] == 'Debian'

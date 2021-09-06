@@ -1,7 +1,36 @@
+- name:
+  apt_key:
+    url: https://deb.frrouting.org/frr/keys.asc
+    state: present
+
+- name:
+  apt_repository:
+    repo: deb https://deb.frrouting.org/frr bullseye frr-stable
+    state: present
+    filename: frr-stable
+
 - name: Install FRR
   apt:
     name:
       - frr
+      - frr-pythontools
     state: present
     default_release: stable
   register: frr_installed
+
+- name: Enable BGP and babel
+  template:
+    src: templates/etc/frr/daemons
+    dest: /etc/frr/daemons
+
+- name: Apply FRR config
+  template:
+    src: templates/etc/frr/frr.conf
+    dest: /etc/frr/frr.conf
+  register: frr_config
+
+- name: Restart FRR on config change
+  service:
+    name: frr
+    state: restarted
+  when: frr_config.changed or frr_installed.changed or wg_config.changed

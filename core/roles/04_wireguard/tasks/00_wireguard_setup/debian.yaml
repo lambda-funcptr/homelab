@@ -5,3 +5,9 @@
     state: present
     default_release: stable
   register: wireguard_installed
+
+- name: Modprobe if wireguard was installed
+  modprobe: 
+    name: wireguard
+    state: present
+  when: wireguard_installed.changed

@@ -2,17 +2,18 @@
 PostUp = wg set %i private-key <(cat /etc/wireguard/key)
 ListenPort = 518{{ site_id }}
 
+Address = {{ wg_overlay_net 
+            | ansible.netcommon.ipsubnet(24, ([site_id, hostvars[item]['site_id']] | min)) 
+            | ansible.netcommon.ipsubnet(31, ([site_id, hostvars[item]['site_id']] | max)) 
+            | ansible.netcommon.ipmath( ((site_id | int)/(hostvars[item]['site_id'] | int)) | round(0, 'floor') | int ) }}/31
 Address = fe80::{{ site_id }}/64
-Address = 100.127.255.{{ site_id }}, fd10:9144:03f2:ffff::{{ site_id }}
+Address = fd10:9144:03f2:ffff::{{ site_id }}
 
 Table = off
 
-{% for peer in groups['corenet'] %}
-# BEGIN {{ peer }}
 [Peer]
-PublicKey = {{ lookup('file', '../secrets/corenet/wireguard/' + peer) }}
-Endpoint = {{ peer }}:518{{ site_id }}
-AllowedIPs = 100.64.0.0/10
-# END {{peer}}
-
-{% endfor %}
+PublicKey = {{ lookup('file', '../secrets/corenet/wireguard/' + item) }}
+Endpoint = {{ hostvars[item]['ansible_host'] }}:518{{ hostvars[item]['site_id'] }}
+AllowedIPs = 100.64.0.0/10, 10.0.0.0/8, ff10:9144:03f2:ffff::/64
+AllowedIPs = fe80::/64, ff02::1:6/128
+PersistentKeepAlive = 25

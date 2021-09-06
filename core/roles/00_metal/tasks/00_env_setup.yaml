@@ -29,6 +29,13 @@
     upgrade: safe
     default_release: stable
 
+- name: Install some common deps
+  apt:
+    name:
+      - gpg
+      - gpg-agent
+    state: present
+
 - name: Configure unattended-upgrades
   copy:
     src: etc/apt/apt.conf.d/20auto-upgrades

@@ -61,11 +61,7 @@
     <disk type="volume" device="disk">
       <driver name="qemu" type="raw" cache="none" io="native" discard="unmap"/>
       <target dev="{{ disk['name'] }}" bus="virtio"/>
-      {% if hostvars[vm["host"]]["vm_store"] == "lvm" %}
-      <source pool="default" volume="vm-{{ inventory_hostname_short }}-{{ disk['name'] }}"/>
-      {% else %}
       <source pool="lvm" volume="vm-{{ inventory_hostname_short }}-{{ disk['name'] }}"/>
-      {% endif %}
       {% if loop.first %}
       <boot order="1"/>
       {% endif %}
