@@ -1,2 +1,3 @@
 - import_tasks: 10_routing_daemon/debian.yaml
+  throttle: 1
   when: ansible_facts['os_family'] == 'Debian'
