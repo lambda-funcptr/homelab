@@ -1,11 +1,18 @@
 [Interface]
 PostUp = wg set %i private-key <(cat /etc/wireguard/key)
-ListenPort = 518{{ site_id }}
+ListenPort = {{ 51800 + (hostvars[item]['site_id'] | int) }}
 
+{% set lower_site_id = ([site_id, hostvars[item]['site_id']] | min) %}
+{% set upper_site_id = ([site_id, hostvars[item]['site_id']] | max) %}
+{% set tunnel_offset = (0 if site_id == lower_site_id else 1) %}
+
+# Lower Site ID: {{ lower_site_id }}
+# Upper Site ID: {{ upper_site_id }}
+# Tunnel Offset: {{ tunnel_offset }}
 Address = {{ wg_overlay_net 
-            | ansible.netcommon.ipsubnet(24, ([site_id, hostvars[item]['site_id']] | min)) 
-            | ansible.netcommon.ipsubnet(31, ([site_id, hostvars[item]['site_id']] | max)) 
-            | ansible.netcommon.ipmath( ((site_id | int)/(hostvars[item]['site_id'] | int)) | round(0, 'floor') | int ) }}/31
+            | ansible.netcommon.ipsubnet(24, lower_site_id) 
+            | ansible.netcommon.ipsubnet(31, upper_site_id) 
+            | ansible.netcommon.ipmath( tunnel_offset ) }}/31
 Address = fe80::{{ site_id }}/64
 Address = fd10:9144:03f2:ffff::{{ site_id }}
 
@@ -13,7 +20,12 @@ Table = off
 
 [Peer]
 PublicKey = {{ lookup('file', '../secrets/corenet/wireguard/' + item) }}
-Endpoint = {{ hostvars[item]['ansible_host'] }}:518{{ hostvars[item]['site_id'] }}
+{% if not '10.0.0.0/8' | ansible.netcommon.network_in_usable(hostvars[item]['ansible_host'])
+    and not '192.168.0.0/8' | ansible.netcommon.network_in_usable(hostvars[item]['ansible_host'])
+    and not '172.16.0.0/12' | ansible.netcommon.network_in_usable(hostvars[item]['ansible_host'])
+    and not '100.64.0.0/10' | ansible.netcommon.network_in_usable(hostvars[item]['ansible_host']) %}
+Endpoint = {{ hostvars[item]['ansible_host'] }}:{{ 51800 + (site_id | int) }}
+{% endif %}
 AllowedIPs = 100.64.0.0/10, 10.0.0.0/8, ff10:9144:03f2:ffff::/64
 AllowedIPs = fe80::/64, ff02::1:6/128
 PersistentKeepAlive = 25

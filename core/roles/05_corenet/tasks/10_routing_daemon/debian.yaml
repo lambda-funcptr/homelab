@@ -13,7 +13,6 @@
   apt:
     name:
       - frr
-      - frr-pythontools
     state: present
     default_release: stable
   register: frr_installed
