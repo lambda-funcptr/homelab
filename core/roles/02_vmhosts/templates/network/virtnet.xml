@@ -1,5 +1,5 @@
 <network ipv6="yes" xmlns:dnsmasq='http://libvirt.org/schemas/network/dnsmasq/1.0'>
-  <name>default</name>
+  <name>virtnet</name>
   <bridge name="virtnet"/>
   <forward mode='open'></forward>
   <ip address="{{ net_v4 }}" netmask="255.255.0.0">

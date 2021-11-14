@@ -88,7 +88,7 @@
     </disk>
     <controller type="pci" index="0" model="pcie-root"/>
     <interface type="network">
-      <source network="default"/>
+      <source network="virtnet"/>
       <model type="virtio"/>
       <boot order="2"/>
       <address type="pci" domain="0x0000" bus="0x01" slot="0x00" function="0x0"/>
